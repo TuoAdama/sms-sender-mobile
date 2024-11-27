@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.sms_sender.service.setting.SettingKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -35,6 +36,13 @@ class DataStoreService(private val context: Context)
     suspend fun saveInt(key: String, value: Int) {
         context.dataStore.edit {
             it[intPreferencesKey(key)] = value
+        }
+    }
+
+    suspend fun getSettingData(): HashMap<String, String>{
+        return HashMap<String, String>().apply {
+            set(SettingKey.COUNTRY_KEY, getString(SettingKey.COUNTRY_KEY) ?: "")
+            set(SettingKey.API_URL_KEY, getString(SettingKey.API_URL_KEY) ?: "")
         }
     }
 }
