@@ -1,5 +1,6 @@
 package com.example.sms_sender
 
+import SettingForm
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -71,58 +72,5 @@ class MainActivity : ComponentActivity() {
                 }
             }})
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingForm(initData: SettingViewModel = SettingViewModel(), onSubmit: (data: Map<String, String>) -> Unit = {data -> println(data.size)}) {
-
-    SmssenderTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text("Paramètre")
-                    }
-                )
-            },
-            content = { padding ->
-                Column (
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(20.dp, 80.dp)
-                ) {
-                    Column {
-                        Text(text = "Pays", modifier = Modifier.padding(0.dp, 10.dp))
-                        CountryChoice{ value -> initData.country = value }
-
-                        Spacer(Modifier.padding(0.dp, 10.dp))
-
-                        Text("Api URL")
-                        TextField(value = initData.apiURL, onValueChange = {value -> initData.apiURL = value})
-
-                        Spacer(Modifier.padding(0.dp, 10.dp))
-
-                        Button(onClick = {
-                            val data = HashMap<String, String>().apply{
-                                set(SettingKey.API_URL_KEY, initData.apiURL)
-                                set(SettingKey.COUNTRY_KEY, initData.country)
-                            }
-                            onSubmit(data);
-                        }) {
-                            Text("Enregistrer")
-                        }
-                    }
-                }
-            }
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SmssenderTheme {
-        SettingForm()
     }
 }
