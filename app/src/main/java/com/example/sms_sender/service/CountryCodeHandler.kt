@@ -2,6 +2,8 @@ package com.example.sms_sender.service
 
 object CountryCodeHandler {
 
+    const val FRANCE: String = "France";
+
     private var countriesMap = HashMap<String, Int>();
 
     init {

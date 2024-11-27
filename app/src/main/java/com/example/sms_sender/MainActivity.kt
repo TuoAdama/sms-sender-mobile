@@ -57,8 +57,8 @@ class MainActivity : ComponentActivity() {
         startService(Intent(this, SmsService::class.java));
 
         lifecycleScope.launch {
-            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: ""
-            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: ""
+            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
+            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
         }
 
         enableEdgeToEdge()
