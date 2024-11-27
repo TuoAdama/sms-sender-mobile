@@ -54,11 +54,13 @@ class MainActivity : ComponentActivity() {
 
         val settingViewModel by viewModels<SettingViewModel>();
 
-        startService(Intent(this, SmsService::class.java));
-
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
             settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
+
+            val intent = Intent(this@MainActivity, SmsService::class.java)
+            intent.putExtra("API_URL", settingViewModel.apiURL);
+            startService(intent);
         }
 
         enableEdgeToEdge()
