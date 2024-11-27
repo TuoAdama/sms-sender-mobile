@@ -3,6 +3,7 @@ package com.example.sms_sender
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
                 onSubmit = {formData -> formData.forEach {(key, value) ->
                 lifecycleScope.launch {
                     dataStore.saveString(key, value)
+                    Toast.makeText(this@MainActivity, "Saved", Toast.LENGTH_SHORT).show();
                 }
             }})
         }
