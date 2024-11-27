@@ -1,6 +1,7 @@
 package com.example.sms_sender
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -32,6 +33,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import com.example.sms_sender.service.CountryCodeHandler
 import com.example.sms_sender.service.DataStoreService
+import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.theme.SmssenderTheme
@@ -51,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
         val settingViewModel by viewModels<SettingViewModel>();
 
-        //startService(Intent(this, SmsService::class.java));
+        startService(Intent(this, SmsService::class.java));
 
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: ""

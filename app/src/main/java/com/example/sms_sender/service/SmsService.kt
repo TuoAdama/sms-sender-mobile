@@ -9,13 +9,25 @@ import android.os.Looper
 import android.os.Message
 import android.os.Process
 import android.telephony.SmsManager
+import android.util.Log
 import android.widget.Toast
+import com.example.sms_sender.service.setting.SettingKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class SmsService : Service() {
 
     private var serviceHandler: ServiceHandler? = null;
     private var serviceLopper: Looper? = null;
     private val apiRequestService: ApiRequestService = ApiRequestService();
+    private lateinit var dataStoreService: DataStoreService
+    private lateinit var smsApiURL: String;
+
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -25,19 +37,26 @@ class SmsService : Service() {
         val smsManager: SmsManager = SmsManager.getDefault();
 
         override fun handleMessage(msg: Message) {
-            apiRequestService.getAvailableMessages().forEach { sms ->
+            while (true) {
                 Thread.sleep(3000);
-                smsManager.sendTextMessage(sms.recipient, null, sms.message, null, null);
+                apiRequestService.getAvailableMessages(apiURL = smsApiURL).forEach { sms ->
+                    Log.i("SMS-SENDING", "id: ${sms.id} number: ${sms.recipient}, message: ${sms.message}")
+                    smsManager.sendTextMessage(sms.recipient, null, sms.message, null, null);
+                }
             }
-            stopSelf(msg.arg1);
         }
     }
 
     override fun onCreate() {
-        HandlerThread("smsService", Process.THREAD_PRIORITY_BACKGROUND).apply {
-            start();
-            serviceLopper = looper;
-            serviceHandler = ServiceHandler(serviceLopper!!);
+
+        dataStoreService = DataStoreService(this);
+        scope.launch {
+            smsApiURL = dataStoreService.getString(SettingKey.API_URL_KEY) ?: throw  Exception("API URL NOT FOUND");
+            HandlerThread("smsService", Process.THREAD_PRIORITY_BACKGROUND).apply {
+                start();
+                serviceLopper = looper;
+                serviceHandler = ServiceHandler(serviceLopper!!);
+            }
         }
     }
 
@@ -48,5 +67,10 @@ class SmsService : Service() {
             serviceHandler?.sendMessage(msg)
         }
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

@@ -6,14 +6,14 @@ import java.net.URL
 
 class ApiRequestService {
 
-    fun getAvailableMessages(): List<Message> {
+    fun getAvailableMessages(apiURL: String): List<Message> {
         return listOf(
-            Message("0751097177", "Bonjour Demsi"),
-            Message("0751097177", "Votre code de confication est 00933"),
-            Message("0751097177", "Petit bonjour de ta part"),
-            Message("0751097177", "Hello, tu vas bien ?"),
-            Message("0751097177", "Ça va bien à Abidjan ?"),
-            Message("0751097177", "Je suis la loit"),
+            Message(1, "0751097177", "Bonjour Demsi"),
+            Message(2, "0751097177", "Votre code de confication est 00933"),
+            Message(3, "0751097177", "Petit bonjour de ta part"),
+            Message(4, "0751097177", "Hello, tu vas bien ?"),
+            Message(5, "0751097177", "Ça va bien à Abidjan ?"),
+            Message(6, "0751097177", "Je suis la loit"),
         )
     }
 }
