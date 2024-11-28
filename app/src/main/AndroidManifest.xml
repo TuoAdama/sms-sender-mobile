@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Smssender"
         tools:targetApi="31">
-        <service android:name=".service.SmsService" />
+        <service android:name=".service.setting.SmsService" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,6 +1,8 @@
 package com.example.sms_sender.ui.components
 
+import android.view.Display.Mode
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -21,7 +23,7 @@ import com.example.sms_sender.service.CountryCodeHandler
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun CountryChoice(onChange: (choice: String) -> Unit  = {message -> println(message) }) {
+fun CountryChoice(modifier: Modifier = Modifier, onChange: (choice: String) -> Unit  = {message -> println(message) }) {
 
     val countries: List<String> = CountryCodeHandler.getCountries();
     var selectedIndex by remember {
@@ -32,8 +34,9 @@ fun CountryChoice(onChange: (choice: String) -> Unit  = {message -> println(mess
         mutableStateOf(false)
     }
 
-    Box{
+    Box(Modifier.fillMaxWidth()){
         ExposedDropdownMenuBox(
+            modifier = Modifier.fillMaxWidth(),
             expanded = isExpanded,
             onExpandedChange = {
                 isExpanded = !isExpanded
@@ -50,7 +53,8 @@ fun CountryChoice(onChange: (choice: String) -> Unit  = {message -> println(mess
             )
             ExposedDropdownMenu(
                 expanded = isExpanded,
-                onDismissRequest = {isExpanded = false}
+                onDismissRequest = {isExpanded = false},
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 countries.forEachIndexed {index, text ->
                     DropdownMenuItem(
