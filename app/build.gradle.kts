@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
+    implementation( libs.java.dotenv)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
