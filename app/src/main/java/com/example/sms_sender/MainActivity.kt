@@ -22,10 +22,10 @@ class MainActivity : ComponentActivity() {
         DataStoreService(this)
     }
 
+    private val settingViewModel by viewModels<SettingViewModel>();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val settingViewModel by viewModels<SettingViewModel>();
 
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
@@ -45,7 +45,14 @@ class MainActivity : ComponentActivity() {
                     dataStore.saveString(key, value)
                     Toast.makeText(this@MainActivity, "Saved", Toast.LENGTH_SHORT).show();
                 }
-            }})
+                }},
+                onStartService = {
+                    settingViewModel.isRunning = true
+                },
+                onStopService = {
+                    settingViewModel.isRunning = false
+                }
+            )
         }
     }
 }
