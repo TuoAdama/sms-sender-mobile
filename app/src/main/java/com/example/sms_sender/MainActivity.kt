@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 onSubmit = {formData -> formData.forEach {(key, value) ->
                 lifecycleScope.launch {
                     dataStore.saveString(key, value)
-                    Toast.makeText(this@MainActivity, "Saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
                 }
                 }},
                 onStartService = {
