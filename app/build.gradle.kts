@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
     implementation( libs.java.dotenv)
+    implementation("androidx.lifecycle:lifecycle-service:2.8.7")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

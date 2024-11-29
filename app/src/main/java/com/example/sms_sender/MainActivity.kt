@@ -1,16 +1,20 @@
 package com.example.sms_sender
 
 import SettingForm
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.sms_sender.service.DataStoreService
-import com.example.sms_sender.service.setting.SmsService
+import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.viewmodel.SettingViewModel
 import kotlinx.coroutines.launch
@@ -27,13 +31,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU){
+            requestNotificationPermission();
+        }
+
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
             settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
-
-            val intent = Intent(this@MainActivity, SmsService::class.java)
-            intent.putExtra("API_URL", settingViewModel.apiURL);
-            startService(intent);
         }
 
         enableEdgeToEdge()
@@ -47,12 +51,36 @@ class MainActivity : ComponentActivity() {
                 }
                 }},
                 onStartService = {
+
+                    Intent(this@MainActivity, SmsService::class.java)
+                        .also {
+                            it.action = SmsService.ACTION.START.name
+                            startService(it)
+                        }
+
                     settingViewModel.isRunning = true
                 },
                 onStopService = {
+
+                    Intent(this@MainActivity, SmsService::class.java)
+                        .also {
+                            it.action = SmsService.ACTION.STOP.name
+                            startService(it)
+                        }
+
                     settingViewModel.isRunning = false
                 }
             )
         }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission(){
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            100
+        )
     }
 }
