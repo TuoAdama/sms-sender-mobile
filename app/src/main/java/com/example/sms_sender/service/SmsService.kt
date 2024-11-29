@@ -53,6 +53,7 @@ class SmsService : Service() {
             job = CoroutineScope(Dispatchers.Default).launch {
             while (isActive){
                 val messages = apiRequest.getAvailableMessages(apiURL)
+                Log.i("NEW_SERVICE", "running...");
                 messages.forEachIndexed { index: Int, message: Message ->
                     Log.i("NEW_SERVICE", "running... $index");
                     notification(index, messages.size)

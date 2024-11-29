@@ -2,9 +2,12 @@ package com.example.sms_sender
 
 import SettingForm
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,11 +33,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU){
             requestNotificationPermission();
         }
-
+        settingViewModel.isRunning = this.smsServiceIsRunning()
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
             settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
@@ -73,6 +75,17 @@ class MainActivity : ComponentActivity() {
                 }
             )
         }
+    }
+
+
+    private fun smsServiceIsRunning(): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val service = activityManager.getRunningServices(Integer.MAX_VALUE)
+        service.forEach { s -> Log.i("SERVICE-RUNNING", s.service.className) }
+
+        return service.find { s ->
+             s.service.className == SmsService::class.java.name
+         } != null
     }
 
 
