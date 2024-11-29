@@ -1,4 +1,4 @@
-package com.example.sms_sender.service
+package com.example.sms_sender.util
 
 import android.util.Log
 import com.example.sms_sender.model.Message
@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ApiRequestService {
+class ApiRequestHandler {
 
     fun getAvailableMessages(apiURL: String): List<Message> {
         val gson = Gson()

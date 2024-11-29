@@ -1,4 +1,4 @@
-package com.example.sms_sender.utils
+package com.example.sms_sender.util
 
 import androidx.compose.ui.graphics.Color
 

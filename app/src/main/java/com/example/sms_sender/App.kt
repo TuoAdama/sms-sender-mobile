@@ -16,7 +16,7 @@ class App : Application() {
             val smsChannel = NotificationChannel(
                 "sms_notification",
                 "SMS Notification",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(smsChannel)

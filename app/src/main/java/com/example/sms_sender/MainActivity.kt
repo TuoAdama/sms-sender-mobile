@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     Intent(this@MainActivity, SmsService::class.java)
                         .also {
                             it.action = SmsService.ACTION.START.name
+                            it.putExtra(SmsService.API_URL_EXTRA, settingViewModel.apiURL)
                             startService(it)
                         }
 
