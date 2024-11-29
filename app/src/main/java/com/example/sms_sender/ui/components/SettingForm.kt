@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -104,8 +105,14 @@ fun SettingForm(
 
                     Spacer(Modifier.padding(0.dp, 10.dp))
 
-                    Text("Api URL")
-                    TextField(value = initData.apiURL, onValueChange = {value -> initData.apiURL = value})
+                    //TextField(value = initData.apiURL, onValueChange = {value -> initData.apiURL = value})
+                    OutlinedTextField(
+                        label = {
+                            Text("API URL")
+                        },
+                        value = initData.apiURL,
+                        onValueChange = {value -> initData.apiURL = value },
+                    )
 
                     Spacer(Modifier.padding(0.dp, 10.dp))
 

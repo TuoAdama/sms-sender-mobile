@@ -1,12 +1,14 @@
 package com.example.sms_sender.ui.components
 
 import android.view.Display.Mode
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -16,7 +18,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.sms_sender.service.CountryCodeHandler
 
 
@@ -36,16 +40,15 @@ fun CountryChoice(modifier: Modifier = Modifier, onChange: (choice: String) -> U
 
     Box(Modifier.fillMaxWidth()){
         ExposedDropdownMenuBox(
-            modifier = Modifier.fillMaxWidth(),
             expanded = isExpanded,
             onExpandedChange = {
                 isExpanded = !isExpanded
             }
         ) {
-            TextField(
+            OutlinedTextField(
                 value = countries[selectedIndex],
                 onValueChange = {},
-                modifier = Modifier.menuAnchor(),
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
                 readOnly = true,
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded =  isExpanded)
