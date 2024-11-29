@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestSmsSendingPermission()
         if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU){
             requestNotificationPermission();
         }
@@ -94,6 +95,14 @@ class MainActivity : ComponentActivity() {
         ActivityCompat.requestPermissions(
             this,
             arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            100
+        )
+    }
+
+    private fun requestSmsSendingPermission(){
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.SEND_SMS),
             100
         )
     }

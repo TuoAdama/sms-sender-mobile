@@ -7,6 +7,7 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.core.app.NotificationCompat
+import com.example.sms_sender.App
 import com.example.sms_sender.model.Message
 import com.example.sms_sender.util.ApiRequestHandler
 import kotlinx.coroutines.CoroutineScope
@@ -67,7 +68,7 @@ class SmsService : Service() {
 
     private fun notification(index: Int, total: Int){
         val smsNotification = NotificationCompat
-            .Builder(this, "sms_notification",)
+            .Builder(this, App.SMS_NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Sms sending")
             .setContentText("Sending SMS $index/$total")
             .build()
