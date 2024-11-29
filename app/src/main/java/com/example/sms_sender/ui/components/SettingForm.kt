@@ -54,7 +54,7 @@ fun SettingForm(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text("Paramètre")
+                        Text("Settings")
                     }
                 )
             },
@@ -108,7 +108,7 @@ fun SettingForm(
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(text = "Pays", modifier = Modifier.padding(0.dp, 10.dp))
+                    Text(text = "Country", modifier = Modifier.padding(0.dp, 10.dp))
                     CountryChoice(modifier = Modifier.fillMaxWidth()){
                             value -> initData.country = value
                     }
@@ -126,7 +126,7 @@ fun SettingForm(
 
                     Spacer(Modifier.padding(0.dp, 10.dp))
 
-                    Text(text = "Authenfication ?", modifier = Modifier.padding(0.dp, 10.dp))
+                    Text(text = "Authentication ?", modifier = Modifier.padding(0.dp, 10.dp))
                     Switch(
                         checked = checked,
                         onCheckedChange = {
@@ -165,7 +165,7 @@ fun SettingForm(
                         }
                         onSubmit(data);
                     }) {
-                        Text("Enregistrer")
+                        Text("Save")
                     }
                 }
             }
