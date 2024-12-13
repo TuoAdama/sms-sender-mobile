@@ -41,6 +41,10 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
             settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
+            settingViewModel.isAuthenticated =
+                (dataStore.getString(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.apiURL) as Boolean
+
+            settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
         }
 
         enableEdgeToEdge()

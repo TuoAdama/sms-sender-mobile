@@ -128,7 +128,7 @@ fun SettingForm(
 
                     Text(text = "Authentication ?", modifier = Modifier.padding(0.dp, 10.dp))
                     Switch(
-                        checked = checked,
+                        checked = initData.isAuthenticated,
                         onCheckedChange = {
                             checked = it
                         }
