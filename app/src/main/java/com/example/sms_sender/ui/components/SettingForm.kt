@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,20 +36,20 @@ import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.theme.SmssenderTheme
 import com.example.sms_sender.util.ColorUtils
 import com.example.sms_sender.viewmodel.SettingViewModel
+import java.util.Objects
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingForm(
     initData: SettingViewModel = SettingViewModel(),
-    onSubmit: (data: Map<String, String>) -> Unit = { data -> println(data.size)},
+    onSubmit: (data: Map<String, Any>) -> Unit = { data -> println(data.size)},
     onStartService: () -> Unit = {},
     onStopService: () -> Unit = {}
 ) {
     val greenColor = Color(76, 175, 80, 255);
     val redColor = Color(233, 30, 99, 255)
 
-    var checked by remember { mutableStateOf(false) }
-
+    Log.i("DEMSI", "key: checked, value: ${initData.isAuthenticated}")
     SmssenderTheme {
         Scaffold(
             topBar = {
@@ -60,7 +61,8 @@ fun SettingForm(
             },
             content = { padding ->
                 Column (
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(20.dp, 80.dp),
                 ) {
                     Row(
@@ -130,11 +132,11 @@ fun SettingForm(
                     Switch(
                         checked = initData.isAuthenticated,
                         onCheckedChange = {
-                            checked = it
+                            initData.isAuthenticated = it
                         }
                     )
 
-                    if (checked){
+                    if (initData.isAuthenticated){
                         Spacer(Modifier.padding(0.dp, 10.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
@@ -159,9 +161,10 @@ fun SettingForm(
                     Spacer(Modifier.padding(0.dp, 10.dp))
 
                     Button(onClick = {
-                        val data = HashMap<String, String>().apply{
+                        val data = HashMap<String, Any>().apply{
                             set(SettingKey.API_URL_KEY, initData.apiURL)
                             set(SettingKey.COUNTRY_KEY, initData.country)
+                            set(SettingKey.API_IS_AUTHENTICATED, initData.isAuthenticated)
                         }
                         onSubmit(data);
                     }) {

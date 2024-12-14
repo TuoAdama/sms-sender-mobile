@@ -41,10 +41,12 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
             settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
-            settingViewModel.isAuthenticated =
-                (dataStore.getString(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.apiURL) as Boolean
-
+            settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
             settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
+
+
+            Log.i("DEMSI", "key: isAuth, value: ${settingViewModel.isAuthenticated}")
+            Log.i("DEMSI", "key: isAuth (dataStore) , value: ${dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED)}")
         }
 
         enableEdgeToEdge()
@@ -53,7 +55,11 @@ class MainActivity : ComponentActivity() {
                 initData = settingViewModel,
                 onSubmit = {formData -> formData.forEach {(key, value) ->
                 lifecycleScope.launch {
-                    dataStore.saveString(key, value)
+                    when (value) {
+                        is Boolean -> dataStore.saveBoolean(key, value)
+                        is Int -> dataStore.saveInt(key, value)
+                        is String -> dataStore.saveString(key, value)
+                    }
                     Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
                 }
                 }},
