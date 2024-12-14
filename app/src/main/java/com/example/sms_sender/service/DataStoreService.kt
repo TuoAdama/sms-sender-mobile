@@ -3,6 +3,7 @@ package com.example.sms_sender.service
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -39,6 +40,18 @@ class DataStoreService(private val context: Context)
         dataStore.edit {
             it[intPreferencesKey(key)] = value
         }
+    }
+
+    suspend fun saveBoolean(key: String, value: Boolean){
+        dataStore.edit {
+            it[booleanPreferencesKey(key)] = value
+        }
+    }
+
+    suspend fun getBoolean(key: String): Boolean? {
+        return dataStore.data.map {
+            it[booleanPreferencesKey(key)]
+        }.first()
     }
 
     suspend fun getSettingData(): HashMap<String, String>{

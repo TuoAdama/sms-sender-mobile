@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,15 +11,23 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,30 +36,33 @@ import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.theme.SmssenderTheme
 import com.example.sms_sender.util.ColorUtils
 import com.example.sms_sender.viewmodel.SettingViewModel
+import java.util.Objects
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingForm(
     initData: SettingViewModel = SettingViewModel(),
-    onSubmit: (data: Map<String, String>) -> Unit = { data -> println(data.size)},
+    onSubmit: (data: Map<String, Any>) -> Unit = { data -> println(data.size)},
     onStartService: () -> Unit = {},
     onStopService: () -> Unit = {}
 ) {
     val greenColor = Color(76, 175, 80, 255);
     val redColor = Color(233, 30, 99, 255)
 
+    Log.i("DEMSI", "key: checked, value: ${initData.isAuthenticated}")
     SmssenderTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text("Paramètre")
+                        Text("Settings")
                     }
                 )
             },
             content = { padding ->
                 Column (
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(20.dp, 80.dp),
                 ) {
                     Row(
@@ -98,7 +110,7 @@ fun SettingForm(
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(text = "Pays", modifier = Modifier.padding(0.dp, 10.dp))
+                    Text(text = "Country", modifier = Modifier.padding(0.dp, 10.dp))
                     CountryChoice(modifier = Modifier.fillMaxWidth()){
                             value -> initData.country = value
                     }
@@ -116,14 +128,49 @@ fun SettingForm(
 
                     Spacer(Modifier.padding(0.dp, 10.dp))
 
+                    Text(text = "Authentication ?", modifier = Modifier.padding(0.dp, 10.dp))
+                    Switch(
+                        checked = initData.isAuthenticated,
+                        onCheckedChange = {
+                            initData.isAuthenticated = it
+                        }
+                    )
+
+                    if (initData.isAuthenticated){
+                        Spacer(Modifier.padding(0.dp, 10.dp))
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = {
+                                Text("Authenfication header")
+                            },
+                            value = initData.authenticationHeader,
+                            onValueChange = {value -> initData.authenticationHeader = value },
+                        )
+                        Spacer(Modifier.padding(0.dp, 10.dp))
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = {
+                                Text("Header value")
+                            },
+                            visualTransformation = PasswordVisualTransformation(),
+                            value = initData.token,
+                            onValueChange = {value -> initData.token = value },
+                        )
+                    }
+
+                    Spacer(Modifier.padding(0.dp, 10.dp))
+
                     Button(onClick = {
-                        val data = HashMap<String, String>().apply{
+                        val data = HashMap<String, Any>().apply{
                             set(SettingKey.API_URL_KEY, initData.apiURL)
                             set(SettingKey.COUNTRY_KEY, initData.country)
+                            set(SettingKey.API_IS_AUTHENTICATED, initData.isAuthenticated)
+                            set(SettingKey.API_AUTHORISATION_HEADER, initData.authenticationHeader)
+                            set(SettingKey.API_TOKEN, initData.token)
                         }
                         onSubmit(data);
                     }) {
-                        Text("Enregistrer")
+                        Text("Save")
                     }
                 }
             }

@@ -38,27 +38,32 @@ class MainActivity : ComponentActivity() {
             requestNotificationPermission();
         }
         settingViewModel.isRunning = this.smsServiceIsRunning()
-        lifecycleScope.launch {
-            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
-            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
-        }
+
+        initSettingData()
 
         enableEdgeToEdge()
         setContent {
             SettingForm(
                 initData = settingViewModel,
                 onSubmit = {formData -> formData.forEach {(key, value) ->
-                lifecycleScope.launch {
-                    dataStore.saveString(key, value)
-                    Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
-                }
+                    lifecycleScope.launch {
+                        when (value) {
+                            is Boolean -> dataStore.saveBoolean(key, value)
+                            is Int -> dataStore.saveInt(key, value)
+                            is String -> dataStore.saveString(key, value)
+                        }
+                        Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
+                    }
                 }},
                 onStartService = {
 
                     Intent(this@MainActivity, SmsService::class.java)
                         .also {
                             it.action = SmsService.ACTION.START.name
-                            it.putExtra(SmsService.API_URL_EXTRA, settingViewModel.apiURL)
+                            it.putExtra(SettingKey.API_URL_KEY, settingViewModel.apiURL)
+                            it.putExtra(SettingKey.API_IS_AUTHENTICATED, settingViewModel.isAuthenticated)
+                            it.putExtra(SettingKey.API_AUTHORISATION_HEADER, settingViewModel.authenticationHeader)
+                            it.putExtra(SettingKey.API_TOKEN, settingViewModel.apiURL)
                             startService(it)
                         }
 
@@ -87,6 +92,17 @@ class MainActivity : ComponentActivity() {
         return service.find { s ->
              s.service.className == SmsService::class.java.name
          } != null
+    }
+
+
+    private fun initSettingData(){
+        lifecycleScope.launch {
+            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
+            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
+            settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
+            settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
+            settingViewModel.authenticationHeader = dataStore.getString(SettingKey.API_AUTHORISATION_HEADER) ?: settingViewModel.authenticationHeader
+        }
     }
 
 
