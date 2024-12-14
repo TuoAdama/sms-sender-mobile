@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.IBinder
 import android.telephony.SmsManager
 import android.util.Log
-import androidx.compose.ui.util.fastForEachIndexed
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
 import com.example.sms_sender.model.Message
+import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.util.ApiRequestHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +16,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
-
-    companion object {
-        const val API_URL_EXTRA = "API_URL"
-    }
 
     enum class ACTION {
         START, STOP
@@ -49,11 +45,19 @@ class SmsService : Service() {
 
     private fun start(intent: Intent?){
 
-            val apiURL = intent?.getStringExtra(API_URL_EXTRA) ?: throw Exception("API URL NOT DEFINED")
+            val apiURL = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
+            val isAuth = intent.getStringExtra(SettingKey.API_IS_AUTHENTICATED).toBoolean()
+            val authHeader = intent.getStringExtra(SettingKey.API_AUTHORISATION_HEADER).toString()
+            val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
+
+            val headers = HashMap<String, String>();
+            if (isAuth){
+                headers[authHeader] = authValue
+            }
 
             job = CoroutineScope(Dispatchers.Default).launch {
             while (isActive){
-                val messages = apiRequest.getAvailableMessages(apiURL)
+                val messages = apiRequest.getAvailableMessages(apiURL, headers)
                 Log.i("NEW_SERVICE", "running...");
                 messages.forEachIndexed { index: Int, message: Message ->
                     Log.i("NEW_SERVICE", "running... $index");

@@ -152,7 +152,7 @@ fun SettingForm(
                             label = {
                                 Text("Header value")
                             },
-                            //visualTransformation = PasswordVisualTransformation(),
+                            visualTransformation = PasswordVisualTransformation(),
                             value = initData.token,
                             onValueChange = {value -> initData.token = value },
                         )

@@ -46,21 +46,24 @@ class MainActivity : ComponentActivity() {
             SettingForm(
                 initData = settingViewModel,
                 onSubmit = {formData -> formData.forEach {(key, value) ->
-                lifecycleScope.launch {
-                    when (value) {
-                        is Boolean -> dataStore.saveBoolean(key, value)
-                        is Int -> dataStore.saveInt(key, value)
-                        is String -> dataStore.saveString(key, value)
+                    lifecycleScope.launch {
+                        when (value) {
+                            is Boolean -> dataStore.saveBoolean(key, value)
+                            is Int -> dataStore.saveInt(key, value)
+                            is String -> dataStore.saveString(key, value)
+                        }
+                        Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
-                }
                 }},
                 onStartService = {
 
                     Intent(this@MainActivity, SmsService::class.java)
                         .also {
                             it.action = SmsService.ACTION.START.name
-                            it.putExtra(SmsService.API_URL_EXTRA, settingViewModel.apiURL)
+                            it.putExtra(SettingKey.API_URL_KEY, settingViewModel.apiURL)
+                            it.putExtra(SettingKey.API_IS_AUTHENTICATED, settingViewModel.isAuthenticated)
+                            it.putExtra(SettingKey.API_AUTHORISATION_HEADER, settingViewModel.authenticationHeader)
+                            it.putExtra(SettingKey.API_TOKEN, settingViewModel.apiURL)
                             startService(it)
                         }
 

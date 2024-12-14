@@ -9,14 +9,17 @@ import java.net.URL
 
 class ApiRequestHandler {
 
-    fun getAvailableMessages(apiURL: String): List<Message> {
+    fun getAvailableMessages(apiURL: String, headers: Map<String, String> = HashMap()): List<Message> {
         val gson = Gson()
         var messages = listOf<Message>()
         try {
             val url = URL(apiURL)
             val connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
-            connection.setRequestProperty("Authorization", "Bearer dedapandoendneojndoendeoj")
+
+            headers.forEach { (key, value) ->
+                connection.setRequestProperty(key, value)
+            }
 
             val responseCode = connection.responseCode
             if (responseCode == HttpURLConnection.HTTP_OK) {
