@@ -11,5 +11,6 @@ class SettingViewModel : ViewModel() {
     var apiURL by mutableStateOf("https://crousapp-dev.tuo-adama.com/api/messages/unsent")
     var isRunning: Boolean by mutableStateOf(false)
     var isAuthenticated: Boolean by mutableStateOf(false)
-    var token: String? by mutableStateOf(null)
+    var authenticationHeader: String by mutableStateOf("Authorization")
+    var token: String by mutableStateOf("")
 }

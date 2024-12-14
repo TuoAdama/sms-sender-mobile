@@ -38,16 +38,8 @@ class MainActivity : ComponentActivity() {
             requestNotificationPermission();
         }
         settingViewModel.isRunning = this.smsServiceIsRunning()
-        lifecycleScope.launch {
-            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
-            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
-            settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
-            settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
 
-
-            Log.i("DEMSI", "key: isAuth, value: ${settingViewModel.isAuthenticated}")
-            Log.i("DEMSI", "key: isAuth (dataStore) , value: ${dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED)}")
-        }
+        initSettingData()
 
         enableEdgeToEdge()
         setContent {
@@ -97,6 +89,17 @@ class MainActivity : ComponentActivity() {
         return service.find { s ->
              s.service.className == SmsService::class.java.name
          } != null
+    }
+
+
+    private fun initSettingData(){
+        lifecycleScope.launch {
+            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
+            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
+            settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
+            settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
+            settingViewModel.authenticationHeader = dataStore.getString(SettingKey.API_AUTHORISATION_HEADER) ?: settingViewModel.authenticationHeader
+        }
     }
 
 

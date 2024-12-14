@@ -143,8 +143,8 @@ fun SettingForm(
                             label = {
                                 Text("Authenfication header")
                             },
-                            value = "Authorization",
-                            onValueChange = {value -> initData.apiURL = value },
+                            value = initData.authenticationHeader,
+                            onValueChange = {value -> initData.authenticationHeader = value },
                         )
                         Spacer(Modifier.padding(0.dp, 10.dp))
                         OutlinedTextField(
@@ -152,9 +152,9 @@ fun SettingForm(
                             label = {
                                 Text("Header value")
                             },
-                            visualTransformation = PasswordVisualTransformation(),
-                            value = initData.apiURL,
-                            onValueChange = {value -> initData.apiURL = value },
+                            //visualTransformation = PasswordVisualTransformation(),
+                            value = initData.token,
+                            onValueChange = {value -> initData.token = value },
                         )
                     }
 
@@ -165,6 +165,8 @@ fun SettingForm(
                             set(SettingKey.API_URL_KEY, initData.apiURL)
                             set(SettingKey.COUNTRY_KEY, initData.country)
                             set(SettingKey.API_IS_AUTHENTICATED, initData.isAuthenticated)
+                            set(SettingKey.API_AUTHORISATION_HEADER, initData.authenticationHeader)
+                            set(SettingKey.API_TOKEN, initData.token)
                         }
                         onSubmit(data);
                     }) {
