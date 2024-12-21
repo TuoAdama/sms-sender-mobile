@@ -32,7 +32,7 @@ class ApiRequestHandler {
                 Log.i("API-SMS", response)
 
             } else {
-                println("Failed to fetch data: $responseCode")
+                Log.i("API-SMS", "Response code: $responseCode")
             }
         } catch (e: Exception) {
             e.printStackTrace()

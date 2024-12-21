@@ -50,8 +50,7 @@ class SmsService : Service() {
             val authHeader = intent.getStringExtra(SettingKey.API_AUTHORISATION_HEADER).toString()
             val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
 
-            val headers = HashMap<String, String>();
-            headers["nom"] = "Adama"
+            val headers = HashMap<String, String>()
             if (isAuth){
                 headers[authHeader] = authValue
             }
