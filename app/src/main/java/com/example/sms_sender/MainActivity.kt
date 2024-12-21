@@ -60,10 +60,11 @@ class MainActivity : ComponentActivity() {
                     Intent(this@MainActivity, SmsService::class.java)
                         .also {
                             it.action = SmsService.ACTION.START.name
+                            Log.i("MainActivity", "isAuth: ${settingViewModel.isAuthenticated}")
                             it.putExtra(SettingKey.API_URL_KEY, settingViewModel.apiURL)
                             it.putExtra(SettingKey.API_IS_AUTHENTICATED, settingViewModel.isAuthenticated)
                             it.putExtra(SettingKey.API_AUTHORISATION_HEADER, settingViewModel.authenticationHeader)
-                            it.putExtra(SettingKey.API_TOKEN, settingViewModel.apiURL)
+                            it.putExtra(SettingKey.API_TOKEN, settingViewModel.token)
                             startService(it)
                         }
 
