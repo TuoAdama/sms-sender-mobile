@@ -46,11 +46,12 @@ class SmsService : Service() {
     private fun start(intent: Intent?){
 
             val apiURL = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
-            val isAuth = intent.getStringExtra(SettingKey.API_IS_AUTHENTICATED).toBoolean()
+            val isAuth = intent.getBooleanExtra(SettingKey.API_IS_AUTHENTICATED, false);
             val authHeader = intent.getStringExtra(SettingKey.API_AUTHORISATION_HEADER).toString()
             val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
 
             val headers = HashMap<String, String>();
+            headers["nom"] = "Adama"
             if (isAuth){
                 headers[authHeader] = authValue
             }
@@ -58,7 +59,8 @@ class SmsService : Service() {
             job = CoroutineScope(Dispatchers.Default).launch {
             while (isActive){
                 val messages = apiRequest.getAvailableMessages(apiURL, headers)
-                Log.i("NEW_SERVICE", "running...");
+                Log.i("NEW_SERVICE", "isAuth: $isAuth, authHeader: $authHeader, authValue: $authValue apiUrl: $apiURL, headers: $headers")
+                Log.i("NEW_SERVICE", "running... message $messages");
                 messages.forEachIndexed { index: Int, message: Message ->
                     Log.i("NEW_SERVICE", "running... $index");
                     notification(index, messages.size)
