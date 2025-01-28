@@ -11,5 +11,5 @@
     <string name="service_stop">Arrêté</string>
     <string name="setting">Paramètres</string>
     <string name="country">Pays</string>
-    <string name="authentication">Authentification ?\n</string>
+    <string name="authentication">Authentification ?</string>
 </resources>
