@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">sms-sender</string>
+    <string name="save_btn">Enregister</string>
+    <string name="form_header_name">Header value</string>
+    <string name="form_auth_name">Authenfication header</string>
+    <string name="form_config_name">Configuration</string>
+    <string name="form_start_btn">Lancer</string>
+    <string name="form_stop_btn">Arrêter</string>
+    <string name="form_title">Sms Service</string>
+    <string name="service_running">En cours...</string>
+    <string name="service_stop">Arrêté</string>
+    <string name="setting">Paramètres</string>
+    <string name="country">Pays</string>
+    <string name="authentication">Authentification ?\n</string>
 </resources>

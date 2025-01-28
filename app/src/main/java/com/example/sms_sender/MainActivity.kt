@@ -103,6 +103,7 @@ class MainActivity : ComponentActivity() {
             settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
             settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
             settingViewModel.authenticationHeader = dataStore.getString(SettingKey.API_AUTHORISATION_HEADER) ?: settingViewModel.authenticationHeader
+            settingViewModel.loading = false
         }
     }
 
