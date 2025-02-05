@@ -27,9 +27,11 @@ fun SmsServiceAction (
     onStartService: () -> Unit,
     onStopService: () -> Unit,
 ){
-    Column(
 
-    ){
+    val greenColor = Color(76, 175, 80, 255);
+    val redColor = Color(233, 30, 99, 255)
+
+    Column{
 
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -46,7 +48,7 @@ fun SmsServiceAction (
                 modifier = Modifier.padding(3.dp, 10.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = if(settingUiState.isRunning) ColorUtils.greenColors else ColorUtils.redColors
+                color = if(settingUiState.isRunning) greenColor else redColor
             )
         }
 

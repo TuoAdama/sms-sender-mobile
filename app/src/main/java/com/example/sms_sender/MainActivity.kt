@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -45,7 +46,6 @@ class MainActivity : ComponentActivity() {
             SettingScreen(
                 settingViewModel = settingViewModel,
                 onStartService = {
-
                     val setting = settingViewModel.settingUiState;
 
                     Intent(this@MainActivity, SmsService::class.java)
@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
                             it.putExtra(SettingKey.API_TOKEN, setting.token)
                             startService(it)
                         }
-
                     settingViewModel.setRunning(true)
                 },
                 onStopService = {
@@ -69,7 +68,17 @@ class MainActivity : ComponentActivity() {
                             startService(it)
                         }
                     settingViewModel.setRunning(false)
-                }
+                },
+                onSubmit = {formData -> formData.forEach {(key, value) ->
+                    lifecycleScope.launch {
+                        when (value) {
+                            is Boolean -> dataStore.saveBoolean(key, value)
+                            is Int -> dataStore.saveInt(key, value)
+                            is String -> dataStore.saveString(key, value)
+                        }
+                        Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
+                    }
+                }}
             )
         }
     }

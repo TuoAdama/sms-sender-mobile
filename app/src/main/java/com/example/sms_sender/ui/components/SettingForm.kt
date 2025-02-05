@@ -39,9 +39,6 @@ fun SettingForm(
 
     val settingUiState: SettingUiState = settingViewModel.settingUiState
 
-    val greenColor = Color(76, 175, 80, 255);
-    val redColor = Color(233, 30, 99, 255)
-
     Column (
         modifier = Modifier
             .fillMaxWidth()

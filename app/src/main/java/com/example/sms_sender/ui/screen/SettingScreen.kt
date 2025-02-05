@@ -1,27 +1,20 @@
 package com.example.sms_sender.ui.screen
 
 import SettingForm
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
@@ -34,6 +27,7 @@ fun SettingScreen(
     settingViewModel: SettingViewModel,
     onStartService: () -> Unit,
     onStopService: () -> Unit,
+    onSubmit: (data: Map<String, Any>) -> Unit,
 ) {
     
     val settingUiState = settingViewModel.settingUiState;
@@ -67,7 +61,7 @@ fun SettingScreen(
 
                     HorizontalDivider(modifier = Modifier.padding(PaddingValues(0.dp, 23.dp, 0.dp, 30.dp)))
 
-                    SettingForm(settingViewModel = settingViewModel)
+                    SettingForm(settingViewModel = settingViewModel, onSubmit = onSubmit)
                 }
             }
         }
