@@ -45,42 +45,49 @@ class MainActivity : ComponentActivity() {
         setContent {
             SettingScreen(
                 settingViewModel = settingViewModel,
-                onStartService = {
-                    val setting = settingViewModel.settingUiState;
-
-                    Intent(this@MainActivity, SmsService::class.java)
-                        .also {
-                            it.action = SmsService.ACTION.START.name
-                            Log.i("MainActivity", "isAuth: ${setting.isAuthenticated}")
-                            it.putExtra(SettingKey.API_URL_KEY, setting.apiURL)
-                            it.putExtra(SettingKey.API_IS_AUTHENTICATED, setting.isAuthenticated)
-                            it.putExtra(SettingKey.API_AUTHORISATION_HEADER, setting.authenticationHeader)
-                            it.putExtra(SettingKey.API_TOKEN, setting.token)
-                            startService(it)
-                        }
-                    settingViewModel.setRunning(true)
-                },
-                onStopService = {
-
-                    Intent(this@MainActivity, SmsService::class.java)
-                        .also {
-                            it.action = SmsService.ACTION.STOP.name
-                            startService(it)
-                        }
-                    settingViewModel.setRunning(false)
-                },
-                onSubmit = {formData -> formData.forEach {(key, value) ->
-                    lifecycleScope.launch {
-                        when (value) {
-                            is Boolean -> dataStore.saveBoolean(key, value)
-                            is Int -> dataStore.saveInt(key, value)
-                            is String -> dataStore.saveString(key, value)
-                        }
-                        Toast.makeText(this@MainActivity, R.string.saved, Toast.LENGTH_SHORT).show();
-                    }
-                }}
+                onStartService = { this.onStartSmsService() },
+                onStopService = {this.onStopService()},
+                onSubmit = {formData -> this.onSubmit(formData)}
             )
         }
+    }
+
+    private fun onSubmit(formData: Map<String, Any>) {
+        formData.forEach {(key, value) ->
+            lifecycleScope.launch {
+                when (value) {
+                    is Boolean -> dataStore.saveBoolean(key, value)
+                    is Int -> dataStore.saveInt(key, value)
+                    is String -> dataStore.saveString(key, value)
+                }
+                Toast.makeText(this@MainActivity, R.string.saved, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private fun onStopService() {
+        Intent(this@MainActivity, SmsService::class.java)
+            .also {
+                it.action = SmsService.ACTION.STOP.name
+                startService(it)
+            }
+        settingViewModel.setRunning(false)
+    }
+
+    private fun onStartSmsService(){
+        val setting = settingViewModel.settingUiState;
+
+        Intent(this@MainActivity, SmsService::class.java)
+            .also {
+                it.action = SmsService.ACTION.START.name
+                Log.i("MainActivity", "isAuth: ${setting.isAuthenticated}")
+                it.putExtra(SettingKey.API_URL_KEY, setting.apiURL)
+                it.putExtra(SettingKey.API_IS_AUTHENTICATED, setting.isAuthenticated)
+                it.putExtra(SettingKey.API_AUTHORISATION_HEADER, setting.authenticationHeader)
+                it.putExtra(SettingKey.API_TOKEN, setting.token)
+                startService(it)
+            }
+        settingViewModel.setRunning(true)
     }
 
 
@@ -94,13 +101,11 @@ class MainActivity : ComponentActivity() {
          } != null
     }
 
-
     private fun initSettingData(){
         lifecycleScope.launch {
             settingViewModel.initWithPreferenceData(dataStore);
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission(){
