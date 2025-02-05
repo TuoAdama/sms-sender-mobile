@@ -13,6 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.sms_sender.service.DataStoreService
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
                             is Int -> dataStore.saveInt(key, value)
                             is String -> dataStore.saveString(key, value)
                         }
-                        Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this@MainActivity, R.string.saved, Toast.LENGTH_SHORT).show();
                     }
                 }}
             )
