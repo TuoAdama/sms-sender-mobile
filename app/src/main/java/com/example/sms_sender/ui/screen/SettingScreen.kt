@@ -1,9 +1,10 @@
 package com.example.sms_sender.ui.screen
 
 import SettingForm
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
+import com.example.sms_sender.ui.components.LoadingComponent
 import com.example.sms_sender.ui.components.SmsServiceAction
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,28 +48,25 @@ fun SettingScreen(
         },
         content = { padding ->
 
+            var modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(20.dp, padding.calculateTopPadding())
+
+            if (!settingUiState.isLoading){
+                modifier = modifier.verticalScroll(rememberScrollState())
+            }
+
             Column (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(20.dp, 80.dp),
+                modifier = modifier,
             ){
                 if (settingUiState.isLoading) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.width(64.dp),
-                            color = Color.Black,
-                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        )
-                    }
+                    LoadingComponent()
                 }else {
                     SmsServiceAction(settingUiState, onStartService, onStopService)
+
+                    HorizontalDivider(modifier = Modifier.padding(PaddingValues(0.dp, 23.dp, 0.dp, 30.dp)))
+
                     SettingForm(settingViewModel = settingViewModel)
                 }
             }

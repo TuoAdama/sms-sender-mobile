@@ -45,28 +45,7 @@ fun SettingForm(
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp, 80.dp),
     ) {
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(text = stringResource(R.string.form_title), modifier = Modifier.padding(0.dp, 10.dp),
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold
-            )
-            val runningText = if(settingUiState.isRunning) stringResource(R.string.service_running) else stringResource(R.string.service_stop)
-            Text(text = "($runningText)",
-                modifier = Modifier.padding(3.dp, 10.dp),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = if(settingUiState.isRunning) greenColor else redColor
-            )
-        }
-
-
         Text(text = stringResource(R.string.form_config_name),
             modifier = Modifier.padding(0.dp, 10.dp),
             fontSize = 25.sp,
@@ -85,6 +64,7 @@ fun SettingForm(
             label = {
                 Text("API URL")
             },
+            modifier = Modifier.fillMaxWidth(),
             value = settingUiState.apiURL,
             onValueChange = {value -> settingViewModel.updateSetting(
                 settingUiState.copy(apiURL = value)
