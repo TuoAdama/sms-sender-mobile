@@ -1,6 +1,5 @@
 package com.example.sms_sender
 
-import SettingForm
 import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
@@ -19,7 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.service.setting.SettingKey
-import com.example.sms_sender.viewmodel.SettingViewModel
+import com.example.sms_sender.ui.screen.SettingScreen
+import com.example.sms_sender.ui.screen.SettingViewModel
 import kotlinx.coroutines.launch
 
 
@@ -37,51 +37,57 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU){
             requestNotificationPermission();
         }
-        settingViewModel.isRunning = this.smsServiceIsRunning()
+        settingViewModel.setRunning(this.smsServiceIsRunning())
 
         initSettingData()
 
         enableEdgeToEdge()
         setContent {
-            SettingForm(
-                initData = settingViewModel,
-                onSubmit = {formData -> formData.forEach {(key, value) ->
-                    lifecycleScope.launch {
-                        when (value) {
-                            is Boolean -> dataStore.saveBoolean(key, value)
-                            is Int -> dataStore.saveInt(key, value)
-                            is String -> dataStore.saveString(key, value)
-                        }
-                        Toast.makeText(this@MainActivity, "Enregistré", Toast.LENGTH_SHORT).show();
-                    }
-                }},
-                onStartService = {
-
-                    Intent(this@MainActivity, SmsService::class.java)
-                        .also {
-                            it.action = SmsService.ACTION.START.name
-                            Log.i("MainActivity", "isAuth: ${settingViewModel.isAuthenticated}")
-                            it.putExtra(SettingKey.API_URL_KEY, settingViewModel.apiURL)
-                            it.putExtra(SettingKey.API_IS_AUTHENTICATED, settingViewModel.isAuthenticated)
-                            it.putExtra(SettingKey.API_AUTHORISATION_HEADER, settingViewModel.authenticationHeader)
-                            it.putExtra(SettingKey.API_TOKEN, settingViewModel.token)
-                            startService(it)
-                        }
-
-                    settingViewModel.isRunning = true
-                },
-                onStopService = {
-
-                    Intent(this@MainActivity, SmsService::class.java)
-                        .also {
-                            it.action = SmsService.ACTION.STOP.name
-                            startService(it)
-                        }
-
-                    settingViewModel.isRunning = false
-                }
+            SettingScreen(
+                settingViewModel = settingViewModel,
+                onStartService = { this.onStartSmsService() },
+                onStopService = {this.onStopService()},
+                onSubmit = {formData -> this.onSubmit(formData)}
             )
         }
+    }
+
+    private fun onSubmit(formData: Map<String, Any>) {
+        formData.forEach {(key, value) ->
+            lifecycleScope.launch {
+                when (value) {
+                    is Boolean -> dataStore.saveBoolean(key, value)
+                    is Int -> dataStore.saveInt(key, value)
+                    is String -> dataStore.saveString(key, value)
+                }
+                Toast.makeText(this@MainActivity, R.string.saved, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private fun onStopService() {
+        Intent(this@MainActivity, SmsService::class.java)
+            .also {
+                it.action = SmsService.ACTION.STOP.name
+                startService(it)
+            }
+        settingViewModel.setRunning(false)
+    }
+
+    private fun onStartSmsService(){
+        val setting = settingViewModel.settingUiState;
+
+        Intent(this@MainActivity, SmsService::class.java)
+            .also {
+                it.action = SmsService.ACTION.START.name
+                Log.i("MainActivity", "isAuth: ${setting.isAuthenticated}")
+                it.putExtra(SettingKey.API_URL_KEY, setting.apiURL)
+                it.putExtra(SettingKey.API_IS_AUTHENTICATED, setting.isAuthenticated)
+                it.putExtra(SettingKey.API_AUTHORISATION_HEADER, setting.authenticationHeader)
+                it.putExtra(SettingKey.API_TOKEN, setting.token)
+                startService(it)
+            }
+        settingViewModel.setRunning(true)
     }
 
 
@@ -95,17 +101,11 @@ class MainActivity : ComponentActivity() {
          } != null
     }
 
-
     private fun initSettingData(){
         lifecycleScope.launch {
-            settingViewModel.apiURL = dataStore.getString(SettingKey.API_URL_KEY) ?: settingViewModel.apiURL
-            settingViewModel.country = dataStore.getString(SettingKey.COUNTRY_KEY) ?: settingViewModel.apiURL
-            settingViewModel.isAuthenticated = dataStore.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: settingViewModel.isAuthenticated
-            settingViewModel.token = dataStore.getString(SettingKey.API_TOKEN) ?: settingViewModel.token
-            settingViewModel.authenticationHeader = dataStore.getString(SettingKey.API_AUTHORISATION_HEADER) ?: settingViewModel.authenticationHeader
+            settingViewModel.initWithPreferenceData(dataStore);
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission(){
