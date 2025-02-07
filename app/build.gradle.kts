@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.0"
 }
 
 android {
@@ -57,6 +58,17 @@ dependencies {
     implementation(libs.gson)
     implementation( libs.java.dotenv)
     implementation("androidx.lifecycle:lifecycle-service:2.8.7")
+
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+    // Retrofit with Kotlin serialization Converter
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 
 
     testImplementation(libs.junit)

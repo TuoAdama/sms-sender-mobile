@@ -13,4 +13,5 @@
     <string name="country">Pays</string>
     <string name="authentication">Authentification ?</string>
     <string name="saved">Enregistré</string>
+    <string name="authorizationHeader">Authorization</string>
 </resources>
