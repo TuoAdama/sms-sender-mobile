@@ -77,12 +77,9 @@ fun SettingForm(
                 label = {
                     Text(stringResource(R.string.form_auth_name))
                 },
-                value = settingUiState.authenticationHeader,
-                onValueChange = {
-                    value -> settingViewModel.updateSetting(
-                    settingUiState.copy(
-                    authenticationHeader = value
-                )) },
+                readOnly = true,
+                value = stringResource(R.string.authorizationHeader),
+                onValueChange = {}
             )
             Spacer(Modifier.padding(0.dp, 10.dp))
             OutlinedTextField(

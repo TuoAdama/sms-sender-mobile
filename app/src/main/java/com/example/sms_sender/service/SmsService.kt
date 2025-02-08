@@ -7,12 +7,13 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
-import com.example.sms_sender.model.Message
+import com.example.sms_sender.network.SmsApi
+import com.example.sms_sender.network.SmsResponse
 import com.example.sms_sender.service.setting.SettingKey
-import com.example.sms_sender.util.ApiRequestHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
@@ -24,8 +25,6 @@ class SmsService : Service() {
     private var isActive = true;
 
     private lateinit var job: Job;
-
-    private val apiRequest = ApiRequestHandler()
 
     private val smsManager: SmsManager = SmsManager.getDefault();
 
@@ -45,28 +44,25 @@ class SmsService : Service() {
 
     private fun start(intent: Intent?){
 
-            val apiURL = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
+            var baseUrl = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
             val isAuth = intent.getBooleanExtra(SettingKey.API_IS_AUTHENTICATED, false);
-            val authHeader = intent.getStringExtra(SettingKey.API_AUTHORISATION_HEADER).toString()
             val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
 
-            val headers = HashMap<String, String>()
-            if (isAuth){
-                headers[authHeader] = authValue
-            }
+            baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
             job = CoroutineScope(Dispatchers.Default).launch {
-            while (isActive){
-                val messages = apiRequest.getAvailableMessages(apiURL, headers)
-                Log.i("NEW_SERVICE", "isAuth: $isAuth, authHeader: $authHeader, authValue: $authValue apiUrl: $apiURL, headers: $headers")
-                Log.i("NEW_SERVICE", "running... message $messages");
-                messages.forEachIndexed { index: Int, message: Message ->
-                    Log.i("NEW_SERVICE", "running... $index");
-                    notification(index, messages.size)
-                    sendMessage(message)
+                while (isActive){
+
+                    val smsApiService = SmsApi.retrofitService(baseUrl)
+                    val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
+
+                    messages.forEachIndexed { index: Int, message: SmsResponse ->
+                        Log.i("NEW_SERVICE", "running... $index");
+                        notification(index, messages.size)
+                        sendMessage(message)
+                    }
+                    delay(2000)
                 }
-                Thread.sleep(2000L)
-            }
         }
     }
 
@@ -82,7 +78,7 @@ class SmsService : Service() {
     }
 
 
-    private fun sendMessage(message: Message) {
+    private fun sendMessage(message: SmsResponse) {
         smsManager.sendTextMessage(message.recipient, null, message.message, null, null);
     }
 
