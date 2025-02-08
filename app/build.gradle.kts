@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.0"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -69,6 +70,13 @@ dependencies {
 
     // Kotlin serialization
     implementation(libs.kotlinx.serialization.json)
+
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 
 
     testImplementation(libs.junit)
