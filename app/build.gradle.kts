@@ -58,7 +58,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
     implementation( libs.java.dotenv)
-    implementation("androidx.lifecycle:lifecycle-service:2.8.7")
+    implementation(libs.androidx.lifecycle.service)
 
 
     // Retrofit
@@ -74,9 +74,8 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
 
 
     testImplementation(libs.junit)
