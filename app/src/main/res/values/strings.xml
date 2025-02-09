@@ -14,4 +14,5 @@
     <string name="authentication">Authentification ?</string>
     <string name="saved">Enregistré</string>
     <string name="authorizationHeader">Authorization</string>
+    <string name="messages">Messages</string>
 </resources>
