@@ -1,4 +1,4 @@
-package com.example.sms_sender.ui.screen
+package com.example.sms_sender.ui.screen.setting
 
 import SettingForm
 import androidx.compose.foundation.layout.Column

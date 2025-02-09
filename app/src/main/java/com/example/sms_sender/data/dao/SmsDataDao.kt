@@ -14,4 +14,13 @@ interface SmsDataDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(smsData: SmsData)
+
+    @Query("SELECT COUNT(*) FROM sms_data")
+    fun count(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM sms_data WHERE sent = 1")
+    fun getCountSmsSent(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM sms_data WHERE sent = 0")
+    abstract fun getCountUnSmsSent(): Flow<Int>
 }

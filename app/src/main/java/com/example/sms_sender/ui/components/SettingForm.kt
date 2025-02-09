@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
 import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.components.CountryChoice
-import com.example.sms_sender.ui.screen.SettingUiState
-import com.example.sms_sender.ui.screen.SettingViewModel
+import com.example.sms_sender.ui.screen.setting.SettingUiState
+import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import com.example.sms_sender.ui.theme.SmssenderTheme
 
 @Composable

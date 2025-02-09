@@ -1,4 +1,4 @@
-package com.example.sms_sender.ui.screen
+package com.example.sms_sender.ui.screen.setting
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
