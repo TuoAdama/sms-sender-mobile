@@ -18,8 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.service.setting.SettingKey
-import com.example.sms_sender.ui.screen.home.HomeScreen
-import com.example.sms_sender.ui.screen.setting.SettingScreen
+import com.example.sms_sender.ui.navigation.SmsSenderApp
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import kotlinx.coroutines.launch
 
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            HomeScreen()
+            SmsSenderApp()
         }
     }
 

@@ -21,10 +21,20 @@ import com.example.sms_sender.R
 import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.SmsMessageList
+import com.example.sms_sender.ui.navigation.NavigationRoute
+
+
+object HomeScreenDestination : NavigationRoute {
+    override var route = "home"
+    override var titleRes = R.string.app_name
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navigateToSettingScreen: () -> Unit = {},
     homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ){
 
@@ -34,9 +44,7 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    HomeTopBar(onClickSetting = {
-
-                    })
+                    HomeTopBar(onClickSetting = navigateToSettingScreen)
                 },
             )
         },

@@ -20,6 +20,14 @@ import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
 import com.example.sms_sender.ui.components.LoadingComponent
 import com.example.sms_sender.ui.components.SmsServiceAction
+import com.example.sms_sender.ui.navigation.NavigationRoute
+
+
+object SettingScreenDestination : NavigationRoute {
+    override var route = "setting"
+    override var titleRes = R.string.setting
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
