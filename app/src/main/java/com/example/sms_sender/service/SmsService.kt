@@ -6,15 +6,12 @@ import android.os.IBinder
 import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sms_sender.App
 import com.example.sms_sender.data.repository.SmsDataRepository
-import com.example.sms_sender.data.repository.SmsDataRepositoryImpl
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
 import com.example.sms_sender.service.setting.SettingKey
-import com.example.sms_sender.ui.sms.SmsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -69,7 +66,7 @@ class SmsService : Service() {
                     messages.forEachIndexed { index: Int, message: SmsResponse ->
                         Log.i("NEW_SERVICE", "running... $index");
                         notification(index, messages.size)
-                        // sendMessage(message)
+                        sendMessage(message)
                         smsDataRepository.insert(
                             SmsData(recipient = message.recipient, message = message.message)
                         )
