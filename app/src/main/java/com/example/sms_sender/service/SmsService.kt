@@ -7,6 +7,8 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
+import com.example.sms_sender.data.repository.SmsDataRepository
+import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
 import com.example.sms_sender.service.setting.SettingKey
@@ -28,6 +30,9 @@ class SmsService : Service() {
 
     private val smsManager: SmsManager = SmsManager.getDefault();
 
+
+    private lateinit var smsDataRepository: SmsDataRepository;
+
     override fun onBind(p0: Intent?): IBinder? {
         return null;
     }
@@ -48,6 +53,8 @@ class SmsService : Service() {
             val isAuth = intent.getBooleanExtra(SettingKey.API_IS_AUTHENTICATED, false);
             val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
 
+        smsDataRepository = (this.application as App).appContainer.smsDataRepository
+
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
             job = CoroutineScope(Dispatchers.Default).launch {
@@ -60,6 +67,9 @@ class SmsService : Service() {
                         Log.i("NEW_SERVICE", "running... $index");
                         notification(index, messages.size)
                         sendMessage(message)
+                        smsDataRepository.insert(
+                            SmsData(recipient = message.recipient, message = message.message)
+                        )
                     }
                     delay(2000)
                 }
