@@ -15,6 +15,7 @@ import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewModel() {
 
@@ -33,6 +34,10 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
         }
     }
 
+    fun updateRunningService(isSmsServiceRunning: Boolean){
+        homeUiState = homeUiState.copy(isSmsServiceRunning = isSmsServiceRunning, numOfSmsSent = Random.nextInt())
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -48,5 +53,6 @@ data class HomeUiState(
     val numOfSmsSent: Int = 0,
     val numOfUnSmsSent: Int = 0,
     val totalSms: Int = 0,
+    val isSmsServiceRunning: Boolean = false,
     val messages: List<SmsData> = listOf(),
 )

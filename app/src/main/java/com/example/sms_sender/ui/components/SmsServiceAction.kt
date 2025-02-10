@@ -17,22 +17,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
-import com.example.sms_sender.ui.screen.setting.SettingUiState
-import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import com.example.sms_sender.util.ColorUtils
 
 @Composable
 fun SmsServiceAction (
-    settingUiState: SettingUiState,
-    onStartService: () -> Unit,
-    onStopService: () -> Unit,
+    isServiceRunning: Boolean = false,
+    onStartService: () -> Unit = {},
+    onStopService: () -> Unit = {},
 ){
 
     val greenColor = Color(76, 175, 80, 255);
     val redColor = Color(233, 30, 99, 255)
 
     Column{
-
+        Text("is running: $isServiceRunning")
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -42,13 +40,13 @@ fun SmsServiceAction (
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
             )
-            val runningText = if(settingUiState.isRunning) stringResource(R.string.service_running) else stringResource(R.string.service_stop)
+            val runningText = if(isServiceRunning) stringResource(R.string.service_running) else stringResource(R.string.service_stop)
 
             Text(text = "($runningText)",
                 modifier = Modifier.padding(3.dp, 10.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = if(settingUiState.isRunning) greenColor else redColor
+                color = if(isServiceRunning) greenColor else redColor
             )
         }
 
@@ -58,7 +56,7 @@ fun SmsServiceAction (
             Button(
                 onClick = onStartService,
                 colors = ButtonColors(ColorUtils.greenColors, Color.Black, ColorUtils.greenColorsDisabled, Color.Black),
-                enabled = !settingUiState.isRunning
+                enabled = !isServiceRunning
             )
             {
                 Text(stringResource(R.string.form_start_btn))
@@ -67,7 +65,7 @@ fun SmsServiceAction (
                 onClick = onStopService,
                 modifier = Modifier.padding(10.dp, 0.dp),
                 colors = ButtonColors(ColorUtils.redColors, Color.Black, ColorUtils.redColorsDisabled, Color.Black),
-                enabled = settingUiState.isRunning
+                enabled = isServiceRunning
             ) {
                 Text(stringResource(R.string.form_stop_btn))
             }
@@ -78,9 +76,7 @@ fun SmsServiceAction (
 @Preview(showBackground = true)
 @Composable
 fun SmsServiceActionPreview(){
-    /* SmsServiceAction(
-        settingUiState = SettingViewModel().settingUiState,
-        onStopService = {},
-        onStartService = {}
-    )*/
+    SmsServiceAction(
+        isServiceRunning = false,
+    )
 }

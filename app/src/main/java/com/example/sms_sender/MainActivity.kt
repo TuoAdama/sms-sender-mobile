@@ -1,8 +1,10 @@
 package com.example.sms_sender
 
 import android.Manifest
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -38,42 +40,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onStopService() {
-        Intent(this@MainActivity, SmsService::class.java)
-            .also {
-                it.action = SmsService.ACTION.STOP.name
-                startService(it)
-            }
-        //settingViewModel.setRunning(false)
-    }
-
-    private fun onStartSmsService(){
-        //val setting = settingViewModel.settingUiState;
-
-//        Intent(this@MainActivity, SmsService::class.java)
-//            .also {
-//                it.action = SmsService.ACTION.START.name
-//                Log.i("MainActivity", "isAuth: ${setting.isAuthenticated}")
-//                it.putExtra(SettingKey.API_URL_KEY, setting.apiURL)
-//                it.putExtra(SettingKey.API_IS_AUTHENTICATED, setting.isAuthenticated)
-//                it.putExtra(SettingKey.API_AUTHORISATION_HEADER, setting.authenticationHeader)
-//                it.putExtra(SettingKey.API_TOKEN, setting.token)
-//                startService(it)
-//            }
-        //settingViewModel.setRunning(true)
-    }
-
-
-    private fun smsServiceIsRunning(): Boolean {
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val service = activityManager.getRunningServices(Integer.MAX_VALUE)
-        service.forEach { s -> Log.i("SERVICE-RUNNING", s.service.className) }
-
-        return service.find { s ->
-             s.service.className == SmsService::class.java.name
-         } != null
-    }
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission(){
         ActivityCompat.requestPermissions(
@@ -90,4 +56,31 @@ class MainActivity : ComponentActivity() {
             100
         )
     }
+}
+
+fun Context.getActivityOrNull(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
+}
+
+fun Context.startSmsService() {
+    Intent(this, SmsService::class.java)
+        .also {
+            it.action = SmsService.ACTION.START.name
+            startService(it)
+        }
+}
+
+fun Context.smsServiceIsRunning(): Boolean{
+    val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val service = activityManager.getRunningServices(Integer.MAX_VALUE)
+    service.forEach { s -> Log.i("SERVICE-RUNNING", s.service.className) }
+
+    return service.find { s ->
+        s.service.className == SmsService::class.java.name
+    } != null
 }
