@@ -78,9 +78,9 @@ fun SmsServiceAction (
 @Preview(showBackground = true)
 @Composable
 fun SmsServiceActionPreview(){
-    SmsServiceAction(
+    /* SmsServiceAction(
         settingUiState = SettingViewModel().settingUiState,
         onStopService = {},
         onStartService = {}
-    )
+    )*/
 }

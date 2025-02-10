@@ -14,6 +14,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sms_sender.R
 import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.components.CountryChoice
@@ -23,8 +25,7 @@ import com.example.sms_sender.ui.theme.SmssenderTheme
 
 @Composable
 fun SettingForm(
-    settingViewModel: SettingViewModel,
-    onSubmit: (data: Map<String, Any>) -> Unit = { data -> println(data.size)},
+    settingViewModel: SettingViewModel
 ) {
 
     val settingUiState: SettingUiState = settingViewModel.settingUiState
@@ -108,7 +109,7 @@ fun SettingForm(
                 set(SettingKey.API_AUTHORISATION_HEADER, settingUiState.authenticationHeader)
                 set(SettingKey.API_TOKEN, settingUiState.token)
             }
-            onSubmit(data);
+            settingViewModel.update(data);
         }) {
             Text(stringResource(R.string.save_btn))
         }
@@ -119,8 +120,6 @@ fun SettingForm(
 @Composable
 fun GreetingPreview() {
     SmssenderTheme {
-        SettingForm(
-            settingViewModel = SettingViewModel()
-        )
+
     }
 }

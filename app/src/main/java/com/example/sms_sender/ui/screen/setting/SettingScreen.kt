@@ -35,7 +35,6 @@ fun SettingScreen(
     settingViewModel: SettingViewModel,
     onStartService: () -> Unit,
     onStopService: () -> Unit,
-    onSubmit: (data: Map<String, Any>) -> Unit,
 ) {
     
     val settingUiState = settingViewModel.settingUiState;
@@ -69,7 +68,7 @@ fun SettingScreen(
 
                     HorizontalDivider(modifier = Modifier.padding(PaddingValues(0.dp, 23.dp, 0.dp, 30.dp)))
 
-                    SettingForm(settingViewModel = settingViewModel, onSubmit = onSubmit)
+                    SettingForm(settingViewModel = settingViewModel)
                 }
             }
         }
