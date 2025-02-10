@@ -1,19 +1,15 @@
 package com.example.sms_sender.ui.screen.setting
 
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
-import com.example.sms_sender.R
-import com.example.sms_sender.data.repository.SettingRepository
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.service.setting.SettingKey
 import kotlinx.coroutines.launch
@@ -64,7 +60,6 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
                     is Int -> dataStoreService.saveInt(key, value)
                     is String -> dataStoreService.saveString(key, value)
                 }
-                //Toast.makeText(this@MainActivity, R.string.saved, Toast.LENGTH_SHORT).show();
             }
         }
     }
