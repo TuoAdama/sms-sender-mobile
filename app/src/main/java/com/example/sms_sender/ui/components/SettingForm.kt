@@ -14,10 +14,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sms_sender.R
-import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
@@ -102,14 +99,7 @@ fun SettingForm(
         Spacer(Modifier.padding(0.dp, 10.dp))
 
         Button(onClick = {
-            val data = HashMap<String, Any>().apply{
-                set(SettingKey.API_URL_KEY, settingUiState.apiURL)
-                set(SettingKey.COUNTRY_KEY, settingUiState.country)
-                set(SettingKey.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
-                set(SettingKey.API_AUTHORISATION_HEADER, settingUiState.authenticationHeader)
-                set(SettingKey.API_TOKEN, settingUiState.token)
-            }
-            settingViewModel.update(data);
+            settingViewModel.update()
         }) {
             Text(stringResource(R.string.save_btn))
         }

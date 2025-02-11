@@ -31,8 +31,6 @@ fun NavigationGraph(
         composable(route = SettingScreenDestination.route){
             SettingScreen(
                 settingViewModel = viewModel(factory = SettingViewModel.Factory),
-                onStopService = {},
-                onStartService = {}
             )
         }
     }

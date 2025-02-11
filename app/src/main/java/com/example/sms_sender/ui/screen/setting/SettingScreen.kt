@@ -33,8 +33,6 @@ object SettingScreenDestination : NavigationRoute {
 @Composable
 fun SettingScreen(
     settingViewModel: SettingViewModel,
-    onStartService: () -> Unit,
-    onStopService: () -> Unit,
 ) {
     
     val settingUiState = settingViewModel.settingUiState;

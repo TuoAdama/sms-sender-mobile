@@ -15,4 +15,5 @@
     <string name="saved">Enregistré</string>
     <string name="authorizationHeader">Authorization</string>
     <string name="messages">Messages</string>
+    <string name="setting_required">Vous devez paramètrer l\'application</string>
 </resources>

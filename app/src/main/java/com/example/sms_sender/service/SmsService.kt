@@ -7,11 +7,11 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
+import com.example.sms_sender.data.repository.SettingRepository
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
-import com.example.sms_sender.service.setting.SettingKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,6 +24,13 @@ class SmsService : Service() {
         START, STOP
     }
 
+    companion object SettingKey {
+        val COUNTRY_KEY = "COUNTRY"
+        const val API_URL_KEY = "API_URL"
+        const val API_IS_AUTHENTICATED = "API_IS_AUTHENTICATED"
+        const val API_TOKEN = "API_TOKEN";
+    }
+
     private var isActive = true;
 
     private lateinit var job: Job;
@@ -32,6 +39,7 @@ class SmsService : Service() {
 
 
     private lateinit var smsDataRepository: SmsDataRepository;
+    private lateinit var settingRepository: SettingRepository
 
     override fun onBind(p0: Intent?): IBinder? {
         return null;
@@ -49,11 +57,13 @@ class SmsService : Service() {
 
     private fun start(intent: Intent?){
 
-            var baseUrl = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
-            val isAuth = intent.getBooleanExtra(SettingKey.API_IS_AUTHENTICATED, false);
-            val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
+        val appContainer  = (this.application as App).appContainer
 
-        smsDataRepository = (this.application as App).appContainer.smsDataRepository
+        smsDataRepository = appContainer.smsDataRepository
+
+        var baseUrl = intent?.getStringExtra(API_URL_KEY)!!
+        val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
+        val authValue = intent.getStringExtra(API_TOKEN)!!
 
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 

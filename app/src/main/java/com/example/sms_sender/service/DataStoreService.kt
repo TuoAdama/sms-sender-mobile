@@ -5,16 +5,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.sms_sender.service.setting.SettingKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings");
 
-class DataStoreService(private val context: Context)
+class DataStoreService(context: Context)
 {
     private val dataStore = context.dataStore;
 
@@ -30,18 +28,6 @@ class DataStoreService(private val context: Context)
         }.first()
     }
 
-    suspend fun getInt(key: String): Int? {
-        return dataStore.data.map {
-            it[intPreferencesKey(key)]
-        }.first()
-    }
-
-    suspend fun saveInt(key: String, value: Int) {
-        dataStore.edit {
-            it[intPreferencesKey(key)] = value
-        }
-    }
-
     suspend fun saveBoolean(key: String, value: Boolean){
         dataStore.edit {
             it[booleanPreferencesKey(key)] = value
@@ -52,12 +38,5 @@ class DataStoreService(private val context: Context)
         return dataStore.data.map {
             it[booleanPreferencesKey(key)]
         }.first()
-    }
-
-    suspend fun getSettingData(): HashMap<String, String>{
-        return HashMap<String, String>().apply {
-            set(SettingKey.COUNTRY_KEY, getString(SettingKey.COUNTRY_KEY) ?: "")
-            set(SettingKey.API_URL_KEY, getString(SettingKey.API_URL_KEY) ?: "")
-        }
     }
 }

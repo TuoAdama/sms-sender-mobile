@@ -9,20 +9,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
-import com.example.sms_sender.service.DataStoreService
+import com.example.sms_sender.model.Setting
 import com.example.sms_sender.service.SmsService
-import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.navigation.SmsSenderApp
-import com.example.sms_sender.ui.screen.setting.SettingViewModel
-import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -67,10 +61,21 @@ fun Context.getActivityOrNull(): Activity? {
     return null
 }
 
-fun Context.startSmsService() {
+fun Context.startSmsService(setting: Setting) {
     Intent(this, SmsService::class.java)
         .also {
             it.action = SmsService.ACTION.START.name
+            it.putExtra(SmsService.API_URL_KEY, setting.domain)
+            it.putExtra(SmsService.API_IS_AUTHENTICATED, setting.isAuthenticated)
+            it.putExtra(SmsService.API_TOKEN, setting.token)
+            startService(it)
+        }
+}
+
+fun Context.stopSmsService() {
+    Intent(this, SmsService::class.java)
+        .also {
+            it.action = SmsService.ACTION.STOP.name
             startService(it)
         }
 }

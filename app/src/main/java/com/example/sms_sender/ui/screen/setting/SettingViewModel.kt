@@ -10,8 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
+import com.example.sms_sender.model.Setting
 import com.example.sms_sender.service.DataStoreService
-import com.example.sms_sender.service.setting.SettingKey
+import com.example.sms_sender.service.SmsService
 import kotlinx.coroutines.launch
 
 class SettingViewModel(private val dataStoreService: DataStoreService) : ViewModel() {
@@ -28,7 +29,7 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as App)
-                SettingViewModel(DataStoreService(application.applicationContext))
+                SettingViewModel(dataStoreService = DataStoreService(application))
             }
         }
     }
@@ -37,31 +38,38 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         this.settingUiState = settingUiState;
     }
 
-    fun setRunning(isRunning: Boolean){
-        this.settingUiState = settingUiState.copy(isRunning = isRunning)
+    fun isSettingValid(): Boolean{
+        if (settingUiState.isAuthenticated && settingUiState.token.isEmpty()){
+            return false;
+        }
+        return settingUiState.apiURL.isNotEmpty() && settingUiState.country.isNotEmpty()
     }
 
     private suspend fun initWithPreferenceData(){
         settingUiState = SettingUiState(
-            apiURL = dataStoreService.getString(SettingKey.API_URL_KEY) ?: "",
-            country = dataStoreService.getString(SettingKey.COUNTRY_KEY) ?: "",
-            isAuthenticated = dataStoreService.getBoolean(SettingKey.API_IS_AUTHENTICATED) ?: false,
-            token = dataStoreService.getString(SettingKey.API_TOKEN) ?: "",
-            authenticationHeader = dataStoreService.getString(SettingKey.API_AUTHORISATION_HEADER) ?: "",
+            apiURL = dataStoreService.getString(SmsService.API_URL_KEY) ?: "",
+            country = dataStoreService.getString(SmsService.COUNTRY_KEY) ?: "",
+            isAuthenticated = dataStoreService.getBoolean(SmsService.API_IS_AUTHENTICATED) ?: false,
+            token = dataStoreService.getString(SmsService.API_TOKEN) ?: "",
             isRunning = false
         )
     }
 
-    fun update(formData: Map<String, Any>) {
-        formData.forEach {(key, value) ->
-            viewModelScope.launch {
-                when (value) {
-                    is Boolean -> dataStoreService.saveBoolean(key, value)
-                    is Int -> dataStoreService.saveInt(key, value)
-                    is String -> dataStoreService.saveString(key, value)
-                }
-            }
+    fun update() {
+        viewModelScope.launch {
+            dataStoreService.saveBoolean(SmsService.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
+            dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
+            dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
         }
+    }
+
+    fun getSetting(): Setting {
+        return Setting(
+            country = settingUiState.country,
+            isAuthenticated = settingUiState.isLoading,
+            token = settingUiState.token,
+            domain = settingUiState.apiURL,
+        )
     }
 
 }

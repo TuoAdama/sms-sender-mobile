@@ -1,6 +1,5 @@
 package com.example.sms_sender.ui.screen.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,7 +14,6 @@ import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewModel() {
 
@@ -32,10 +30,6 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
                 messages = smsDataRepository.getItems().first()
             )
         }
-    }
-
-    fun updateRunningService(isSmsServiceRunning: Boolean){
-        homeUiState = homeUiState.copy(isSmsServiceRunning = isSmsServiceRunning, numOfSmsSent = Random.nextInt())
     }
 
     companion object {
