@@ -1,5 +1,6 @@
 package com.example.sms_sender.ui.screen.setting
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -42,6 +43,7 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         if (settingUiState.isAuthenticated && settingUiState.token.isEmpty()){
             return false;
         }
+        Log.i("setting-valid", "${settingUiState.apiURL.isNotEmpty()} and ${settingUiState.country}")
         return settingUiState.apiURL.isNotEmpty() && settingUiState.country.isNotEmpty()
     }
 
@@ -60,6 +62,7 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
             dataStoreService.saveBoolean(SmsService.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
             dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
             dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
+            dataStoreService.saveString(SmsService.COUNTRY_KEY, settingUiState.country)
         }
     }
 

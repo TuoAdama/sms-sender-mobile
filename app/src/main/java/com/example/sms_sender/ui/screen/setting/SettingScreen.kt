@@ -62,8 +62,6 @@ fun SettingScreen(
                 if (settingUiState.isLoading) {
                     LoadingComponent()
                 }else {
-                    //SmsServiceAction(settingUiState, onStartService, onStopService)
-
                     HorizontalDivider(modifier = Modifier.padding(PaddingValues(0.dp, 23.dp, 0.dp, 30.dp)))
 
                     SettingForm(settingViewModel = settingViewModel)

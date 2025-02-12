@@ -98,6 +98,8 @@ fun SettingForm(
 
         Spacer(Modifier.padding(0.dp, 10.dp))
 
+        Text(if (settingViewModel.isSettingValid()) "Valid" else " No valid")
+
         Button(onClick = {
             settingViewModel.update()
         }) {

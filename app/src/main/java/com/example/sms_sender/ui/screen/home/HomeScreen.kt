@@ -19,6 +19,7 @@ import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.SmsMessageList
 import com.example.sms_sender.ui.components.SmsServiceAction
 import com.example.sms_sender.ui.navigation.NavigationRoute
+import com.example.sms_sender.ui.screen.setting.SettingViewModel
 
 
 object HomeScreenDestination : NavigationRoute {
@@ -31,7 +32,8 @@ object HomeScreenDestination : NavigationRoute {
 @Composable
 fun HomeScreen(
     navigateToSettingScreen: () -> Unit = {},
-    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
+    settingViewModel: SettingViewModel
 ){
 
     val homeUiState = homeViewModel.homeUiState
@@ -47,6 +49,7 @@ fun HomeScreen(
         content = { padding ->
             Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
                 SmsServiceAction()
+                Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
                 InfoSection(homeUiState)
                 Text(
                     modifier = Modifier.padding(0.dp, 18.dp),
