@@ -31,7 +31,7 @@ import kotlin.random.Random
 
 @Composable
 fun SmsServiceAction (
-        settingViewModel: SettingViewModel = viewModel(factory = SettingViewModel.Factory)
+    settingViewModel: SettingViewModel = viewModel(factory = SettingViewModel.Factory)
 ){
 
     val context = LocalContext.current
@@ -45,6 +45,7 @@ fun SmsServiceAction (
 
     Column{
         Text("is running: ${isServiceRunning.value}, ${Random.nextInt()}")
+        Text("is valid: ${settingViewModel.isSettingValid()}")
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -91,7 +92,7 @@ fun SmsServiceAction (
             }
         }
 
-        if (!settingViewModel.isSettingValid()){
+        if (settingViewModel.isSettingValid()){
             Text(stringResource(R.string.setting_required))
         }
     }

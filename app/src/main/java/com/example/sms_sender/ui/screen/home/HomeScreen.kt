@@ -48,7 +48,7 @@ fun HomeScreen(
         },
         content = { padding ->
             Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
-                SmsServiceAction()
+                SmsServiceAction(settingViewModel = settingViewModel)
                 Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
                 InfoSection(homeUiState)
                 Text(
