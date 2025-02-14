@@ -7,6 +7,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -15,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sms_sender.R
+import com.example.sms_sender.smsServiceIsRunning
 import com.example.sms_sender.startSmsService
 import com.example.sms_sender.stopSmsService
 import com.example.sms_sender.ui.components.HomeTopBar
@@ -39,8 +44,11 @@ fun HomeScreen(
     settingViewModel: SettingViewModel
 ){
     val homeUiState = homeViewModel.homeUiState
-
     val context = LocalContext.current
+
+    var isServiceRunning by remember {
+        mutableStateOf(context.smsServiceIsRunning())
+    }
 
     Scaffold(
         topBar = {
@@ -49,14 +57,14 @@ fun HomeScreen(
                     HomeTopBar(
                         onClickSetting = navigateToSettingScreen,
                         onStartService = {
-                            homeViewModel.setIsServiceRunning(true)
-                            context.stopSmsService();
+                            context.startSmsService(settingViewModel.getSetting())
+                            isServiceRunning = context.smsServiceIsRunning();
                         },
                         onStopService = {
-                            homeViewModel.setIsServiceRunning(false)
-                            context.startSmsService(settingViewModel.getSetting())
+                            context.stopSmsService();
+                            isServiceRunning = context.smsServiceIsRunning();
                         },
-                        isServiceRunning = homeUiState.isSmsServiceRunning,
+                        isServiceRunning =isServiceRunning,
                         isSettingValid = settingViewModel.isSettingValid(),
                     )
                 },

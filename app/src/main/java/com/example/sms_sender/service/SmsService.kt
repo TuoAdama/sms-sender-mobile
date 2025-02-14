@@ -13,15 +13,12 @@ import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
 
-    enum class ACTION {
-        START, STOP
-    }
+    private val SMS_LOGGER_TAG = "SMS-SERVICE"
 
     companion object SettingKey {
         val COUNTRY_KEY = "COUNTRY"
@@ -31,8 +28,6 @@ class SmsService : Service() {
     }
 
     private var isActive = true;
-
-    private lateinit var job: Job;
 
     private val smsManager: SmsManager = SmsManager.getDefault();
 
@@ -44,12 +39,7 @@ class SmsService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        when (intent?.action){
-            ACTION.START.name -> start(intent)
-            ACTION.STOP.name -> stop()
-        }
-
+        start(intent)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -65,16 +55,15 @@ class SmsService : Service() {
 
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
-            job = CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
-
                     val smsApiService = SmsApi.retrofitService(baseUrl)
                     val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
 
-                    Log.i("sms-token", baseUrl);
+                    Log.i(SMS_LOGGER_TAG, baseUrl);
 
                     messages.forEachIndexed { index: Int, message: SmsResponse ->
-                        Log.i("NEW_SERVICE", "running... $index");
+                        Log.i(SMS_LOGGER_TAG, "running... $index");
                         notification(index, messages.size)
                         sendMessage(message)
                         smsDataRepository.insert(
@@ -102,9 +91,8 @@ class SmsService : Service() {
         smsManager.sendTextMessage(message.recipient, null, message.message, null, null);
     }
 
-    private fun stop(){
+    override fun onDestroy() {
+        Log.i(SMS_LOGGER_TAG, "")
         isActive = false
-        job.cancel()
-        stopSelf()
     }
 }

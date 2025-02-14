@@ -42,10 +42,10 @@ fun SmsServiceAction (
     isServiceRunning: Boolean = false,
     enabled: Boolean = false,
 ){
-    if (isServiceRunning){
+    if (!isServiceRunning){
         IconButton(onClick = onStartService, enabled = enabled) {
             Icon(
-                imageVector = Icons.Filled.Clear,
+                imageVector = Icons.Default.PlayArrow,
                 contentDescription = stringResource(R.string.setting),
                 modifier = Modifier.size(35.dp),
             )
@@ -53,7 +53,7 @@ fun SmsServiceAction (
     }else{
         IconButton(onClick = onStopService, enabled = enabled) {
             Icon(
-                imageVector = Icons.Default.PlayArrow,
+                imageVector = Icons.Filled.Clear,
                 contentDescription = stringResource(R.string.setting),
                 modifier = Modifier.size(35.dp),
             )

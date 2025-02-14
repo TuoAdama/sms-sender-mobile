@@ -21,6 +21,10 @@ import com.example.sms_sender.ui.navigation.SmsSenderApp
 
 class MainActivity : ComponentActivity() {
 
+    companion object{
+        var smsServiceIntent: Intent? =null;
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestSmsSendingPermission()
@@ -62,9 +66,8 @@ fun Context.getActivityOrNull(): Activity? {
 }
 
 fun Context.startSmsService(setting: Setting) {
-    Intent(this, SmsService::class.java)
+    MainActivity.smsServiceIntent = Intent(this, SmsService::class.java)
         .also {
-            it.action = SmsService.ACTION.START.name
             it.putExtra(SmsService.API_URL_KEY, setting.domain)
             it.putExtra(SmsService.API_IS_AUTHENTICATED, setting.isAuthenticated)
             it.putExtra(SmsService.API_TOKEN, setting.token)
@@ -73,11 +76,9 @@ fun Context.startSmsService(setting: Setting) {
 }
 
 fun Context.stopSmsService() {
-    Intent(this, SmsService::class.java)
-        .also {
-            it.action = SmsService.ACTION.STOP.name
-            startService(it)
-        }
+    if (MainActivity.smsServiceIntent !== null){
+        stopService(MainActivity.smsServiceIntent)
+    }
 }
 
 fun Context.smsServiceIsRunning(): Boolean{
