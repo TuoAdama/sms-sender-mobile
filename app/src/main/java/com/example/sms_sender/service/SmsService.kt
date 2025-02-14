@@ -73,6 +73,8 @@ class SmsService : Service() {
                     val smsApiService = SmsApi.retrofitService(baseUrl)
                     val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
 
+                    Log.i("sms-token", baseUrl);
+
                     messages.forEachIndexed { index: Int, message: SmsResponse ->
                         Log.i("NEW_SERVICE", "running... $index");
                         notification(index, messages.size)
@@ -81,7 +83,7 @@ class SmsService : Service() {
                             SmsData(recipient = message.recipient, message = message.message)
                         )
                     }
-                    delay(2000)
+                    delay(5000)
                 }
         }
     }

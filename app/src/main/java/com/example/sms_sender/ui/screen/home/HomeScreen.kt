@@ -8,12 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sms_sender.R
+import com.example.sms_sender.startSmsService
+import com.example.sms_sender.stopSmsService
 import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.SmsMessageList
@@ -37,14 +40,22 @@ fun HomeScreen(
 ){
     val homeUiState = homeViewModel.homeUiState
 
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     HomeTopBar(
                         onClickSetting = navigateToSettingScreen,
-                        onStopService = {homeViewModel.setIsServiceRunning(true)},
-                        onStartService = {homeViewModel.setIsServiceRunning(false)},
+                        onStartService = {
+                            homeViewModel.setIsServiceRunning(true)
+                            context.stopSmsService();
+                        },
+                        onStopService = {
+                            homeViewModel.setIsServiceRunning(false)
+                            context.startSmsService(settingViewModel.getSetting())
+                        },
                         isServiceRunning = homeUiState.isSmsServiceRunning,
                         isSettingValid = settingViewModel.isSettingValid(),
                     )

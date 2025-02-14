@@ -69,7 +69,7 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
     fun getSetting(): Setting {
         return Setting(
             country = settingUiState.country,
-            isAuthenticated = settingUiState.isLoading,
+            isAuthenticated = settingUiState.isAuthenticated,
             token = settingUiState.token,
             domain = settingUiState.apiURL,
         )

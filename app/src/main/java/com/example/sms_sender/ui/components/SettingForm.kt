@@ -85,7 +85,7 @@ fun SettingForm(
                 label = {
                     Text(stringResource(R.string.form_header_name))
                 },
-                visualTransformation = PasswordVisualTransformation(),
+                //visualTransformation = PasswordVisualTransformation(),
                 value = settingUiState.token,
                 maxLines = 1,
                 onValueChange = {value ->
