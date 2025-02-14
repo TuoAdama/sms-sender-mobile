@@ -1,14 +1,11 @@
 package com.example.sms_sender.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +21,11 @@ import com.example.sms_sender.R
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
-    onClickSetting: () -> Unit = {}
+    isServiceRunning: Boolean = false,
+    isSettingValid: Boolean = false,
+    onClickSetting: () -> Unit = {},
+    onStartService: () -> Unit = {},
+    onStopService: () -> Unit = {},
 ){
     Row(
         modifier = modifier
@@ -34,12 +35,20 @@ fun HomeTopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(stringResource(R.string.messages))
-        IconButton(onClick = onClickSetting) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = stringResource(R.string.setting),
-                modifier = Modifier.size(35.dp),
+        Row {
+            SmsServiceAction(
+                isServiceRunning = isServiceRunning,
+                onStartService = onStartService,
+                onStopService = onStopService,
+                enabled = isSettingValid
             )
+            IconButton(onClick = onClickSetting) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.setting),
+                    modifier = Modifier.size(35.dp),
+                )
+            }
         }
     }
 }

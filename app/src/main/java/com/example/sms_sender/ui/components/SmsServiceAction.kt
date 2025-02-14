@@ -4,8 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,69 +37,26 @@ import kotlin.random.Random
 
 @Composable
 fun SmsServiceAction (
-    settingViewModel: SettingViewModel = viewModel(factory = SettingViewModel.Factory)
+    onStartService: () -> Unit = {},
+    onStopService: () -> Unit = {},
+    isServiceRunning: Boolean = false,
+    enabled: Boolean = false,
 ){
-
-    val context = LocalContext.current
-
-    val isServiceRunning = remember {
-        mutableStateOf(context.smsServiceIsRunning())
-    }
-
-    val greenColor = Color(76, 175, 80, 255);
-    val redColor = Color(233, 30, 99, 255)
-
-    Column{
-        Text("is running: ${isServiceRunning.value}, ${Random.nextInt()}")
-        Text("is valid: ${settingViewModel.isSettingValid()}")
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 10.dp)
-        ){
-            Text(text = stringResource(R.string.form_title), modifier = Modifier.padding(0.dp, 10.dp),
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold
-            )
-            val runningText = if(isServiceRunning.value) stringResource(R.string.service_running) else stringResource(R.string.service_stop)
-
-            Text(text = "($runningText)",
-                modifier = Modifier.padding(3.dp, 10.dp),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = if(isServiceRunning.value) greenColor else redColor
+    if (isServiceRunning){
+        IconButton(onClick = onStartService, enabled = enabled) {
+            Icon(
+                imageVector = Icons.Filled.Clear,
+                contentDescription = stringResource(R.string.setting),
+                modifier = Modifier.size(35.dp),
             )
         }
-
-        Row(
-            modifier = Modifier.padding(0.dp, 5.dp)
-        ) {
-            Button(
-                onClick = {
-                    context.startSmsService(settingViewModel.getSetting())
-                    isServiceRunning.value = true
-                },
-                colors = ButtonColors(ColorUtils.greenColors, Color.Black, ColorUtils.greenColorsDisabled, Color.Black),
-                enabled = !isServiceRunning.value && settingViewModel.isSettingValid()
+    }else{
+        IconButton(onClick = onStopService, enabled = enabled) {
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = stringResource(R.string.setting),
+                modifier = Modifier.size(35.dp),
             )
-            {
-                Text(stringResource(R.string.form_start_btn))
-            }
-            Button(
-                onClick = {
-                    context.stopSmsService()
-                    isServiceRunning.value = false
-                },
-                modifier = Modifier.padding(10.dp, 0.dp),
-                colors = ButtonColors(ColorUtils.redColors, Color.Black, ColorUtils.redColorsDisabled, Color.Black),
-                enabled = isServiceRunning.value && settingViewModel.isSettingValid()
-            ) {
-                Text(stringResource(R.string.form_stop_btn))
-            }
-        }
-
-        if (settingViewModel.isSettingValid()){
-            Text(stringResource(R.string.setting_required))
         }
     }
 }

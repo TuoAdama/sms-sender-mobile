@@ -35,20 +35,24 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
     settingViewModel: SettingViewModel
 ){
-
     val homeUiState = homeViewModel.homeUiState
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    HomeTopBar(onClickSetting = navigateToSettingScreen)
+                    HomeTopBar(
+                        onClickSetting = navigateToSettingScreen,
+                        onStopService = {homeViewModel.setIsServiceRunning(true)},
+                        onStartService = {homeViewModel.setIsServiceRunning(false)},
+                        isServiceRunning = homeUiState.isSmsServiceRunning,
+                        isSettingValid = settingViewModel.isSettingValid(),
+                    )
                 },
             )
         },
         content = { padding ->
             Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
-                SmsServiceAction(settingViewModel = settingViewModel)
                 Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
                 InfoSection(homeUiState)
                 Text(

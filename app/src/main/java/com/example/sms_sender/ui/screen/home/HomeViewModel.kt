@@ -40,6 +40,10 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
             }
         }
     }
+
+    fun setIsServiceRunning(isRunning: Boolean){
+        this.homeUiState = this.homeUiState.copy(isSmsServiceRunning = isRunning)
+    }
 }
 
 
