@@ -7,7 +7,6 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
-import com.example.sms_sender.data.repository.SettingRepository
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
@@ -39,7 +38,6 @@ class SmsService : Service() {
 
 
     private lateinit var smsDataRepository: SmsDataRepository;
-    private lateinit var settingRepository: SettingRepository
 
     override fun onBind(p0: Intent?): IBinder? {
         return null;

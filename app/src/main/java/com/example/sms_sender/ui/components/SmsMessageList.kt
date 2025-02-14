@@ -2,6 +2,8 @@ package com.example.sms_sender.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +15,7 @@ import com.example.sms_sender.model.SmsData
 fun SmsMessageList(
     messages: List<SmsData>
 ){
-    Column {
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         messages.forEach {
             SmsMessageItem(smsData = it, modifier = Modifier.padding(0.dp, 10.dp))
             HorizontalDivider()
