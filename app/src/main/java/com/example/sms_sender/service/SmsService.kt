@@ -92,7 +92,7 @@ class SmsService : Service() {
     }
 
     override fun onDestroy() {
-        Log.i(SMS_LOGGER_TAG, "")
+        Log.i(SMS_LOGGER_TAG, "sms service stopped")
         isActive = false
     }
 }

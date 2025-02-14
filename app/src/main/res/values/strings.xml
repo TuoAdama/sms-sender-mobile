@@ -16,4 +16,5 @@
     <string name="authorizationHeader">Authorization</string>
     <string name="messages">Messages</string>
     <string name="setting_required">Vous devez paramètrer l\'application</string>
+    <string name="noMessage">Aucun message</string>
 </resources>
