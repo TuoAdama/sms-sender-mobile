@@ -12,22 +12,35 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewModel() {
 
-    var homeUiState by mutableStateOf(HomeUiState())
+    private val _homeUiStateFlow =  MutableStateFlow(HomeUiState())
+    var homeUiState: StateFlow<HomeUiState> = _homeUiStateFlow
     private set
 
 
     init {
         viewModelScope.launch {
-            homeUiState =  HomeUiState(
-                numOfSmsSent = smsDataRepository.getCountSmsSent().first(),
-                numOfUnSmsSent = smsDataRepository.getCountUnSmsSent().first(),
-                totalSms = smsDataRepository.count().first(),
-                messages = smsDataRepository.getItems().first()
+            homeUiState = smsDataRepository.getItems().map {
+                HomeUiState(
+                    numOfSmsSent = smsDataRepository.getCountSmsSent().first(),
+                    numOfUnSmsSent = smsDataRepository.getCountUnSmsSent().first(),
+                    totalSms = smsDataRepository.count().first(),
+                    messages = it
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = HomeUiState()
             )
         }
     }
@@ -42,7 +55,7 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
     }
 
     fun setIsServiceRunning(isRunning: Boolean){
-        this.homeUiState = this.homeUiState.copy(isSmsServiceRunning = isRunning)
+        this._homeUiStateFlow.value = this._homeUiStateFlow.value.copy(isSmsServiceRunning = isRunning)
     }
 }
 
