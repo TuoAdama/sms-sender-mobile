@@ -14,7 +14,6 @@ import com.example.sms_sender.network.SmsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
@@ -76,8 +75,9 @@ class SmsService : Service() {
 
     private fun startSmsSending(){
         CoroutineScope(Dispatchers.Default).launch {
-            smsDataRepository.getUnsentItems().collect {sendMessage(it)}
-            delay(5000)
+            smsDataRepository.getUnsentItems().collect {
+                sendMessage(it)
+            }
         }
     }
 
