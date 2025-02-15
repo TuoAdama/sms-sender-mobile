@@ -13,4 +13,8 @@ class SmsDataRepositoryImpl(private val smsDataDao: SmsDataDao) : SmsDataReposit
     override fun getCountSmsSent(): Flow<Int>  = smsDataDao.getCountSmsSent()
     override fun getCountUnSmsSent(): Flow<Int>  = smsDataDao.getCountUnSmsSent()
 
+    override fun getUnsentItems(): Flow<List<SmsData>> = smsDataDao.getAllUnsentItems()
+
+    override fun update(smsData: SmsData): Int = smsDataDao.update(smsData)
+
 }

@@ -14,6 +14,7 @@ import com.example.sms_sender.network.SmsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
@@ -39,16 +40,14 @@ class SmsService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val appContainer  = (this.application as App).appContainer
+        smsDataRepository = appContainer.smsDataRepository
         start(intent)
+        startSmsSending()
         return super.onStartCommand(intent, flags, startId)
     }
 
     private fun start(intent: Intent?){
-
-        val appContainer  = (this.application as App).appContainer
-
-        smsDataRepository = appContainer.smsDataRepository
-
         var baseUrl = intent?.getStringExtra(API_URL_KEY)!!
         val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
         val authValue = intent.getStringExtra(API_TOKEN)!!
@@ -65,13 +64,20 @@ class SmsService : Service() {
                     messages.forEachIndexed { index: Int, message: SmsResponse ->
                         Log.i(SMS_LOGGER_TAG, "running... $index");
                         notification(index, messages.size)
-                        sendMessage(message)
                         smsDataRepository.insert(
                             SmsData(recipient = message.recipient, message = message.message)
                         )
                     }
                     delay(5000)
                 }
+        }
+    }
+
+
+    private fun startSmsSending(){
+        CoroutineScope(Dispatchers.Default).launch {
+            smsDataRepository.getUnsentItems().collect {sendMessage(it)}
+            delay(5000)
         }
     }
 
@@ -87,8 +93,12 @@ class SmsService : Service() {
     }
 
 
-    private fun sendMessage(message: SmsResponse) {
-        smsManager.sendTextMessage(message.recipient, null, message.message, null, null);
+    private fun sendMessage(messages: List<SmsData>) {
+        messages.forEach {
+            smsManager.sendTextMessage(it.recipient, null, it.message, null, null)
+            Log.i(SMS_LOGGER_TAG, "[sms sent]: $it")
+            smsDataRepository.update(it.copy(sent = true))
+        }
     }
 
     override fun onDestroy() {

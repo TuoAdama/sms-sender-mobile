@@ -1,8 +1,5 @@
 package com.example.sms_sender.ui.screen.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,7 +12,6 @@ import com.example.sms_sender.model.SmsData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -52,10 +48,6 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
                 HomeViewModel(appContainer.smsDataRepository)
             }
         }
-    }
-
-    fun setIsServiceRunning(isRunning: Boolean){
-        this._homeUiStateFlow.value = this._homeUiStateFlow.value.copy(isSmsServiceRunning = isRunning)
     }
 }
 
