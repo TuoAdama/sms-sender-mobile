@@ -46,6 +46,7 @@ fun HomeScreen(
 ){
     val homeUiState by homeViewModel.homeUiState.collectAsState()
     val context = LocalContext.current
+    val isNetworkConnect = homeViewModel.isNetworkConnected.collectAsState()
 
     var isServiceRunning by remember {
         mutableStateOf(context.smsServiceIsRunning())
@@ -73,7 +74,6 @@ fun HomeScreen(
         },
         content = { padding ->
             Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
-                Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
                 InfoSection(homeUiState)
                 Text(
                     modifier = Modifier.padding(0.dp, 18.dp),
