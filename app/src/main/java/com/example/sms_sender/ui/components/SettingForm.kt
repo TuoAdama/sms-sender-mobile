@@ -15,16 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
-import com.example.sms_sender.service.setting.SettingKey
 import com.example.sms_sender.ui.components.CountryChoice
-import com.example.sms_sender.ui.screen.SettingUiState
-import com.example.sms_sender.ui.screen.SettingViewModel
+import com.example.sms_sender.ui.screen.setting.SettingUiState
+import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import com.example.sms_sender.ui.theme.SmssenderTheme
 
 @Composable
 fun SettingForm(
-    settingViewModel: SettingViewModel,
-    onSubmit: (data: Map<String, Any>) -> Unit = { data -> println(data.size)},
+    settingViewModel: SettingViewModel
 ) {
 
     val settingUiState: SettingUiState = settingViewModel.settingUiState
@@ -87,7 +85,7 @@ fun SettingForm(
                 label = {
                     Text(stringResource(R.string.form_header_name))
                 },
-                visualTransformation = PasswordVisualTransformation(),
+                //visualTransformation = PasswordVisualTransformation(),
                 value = settingUiState.token,
                 maxLines = 1,
                 onValueChange = {value ->
@@ -100,15 +98,10 @@ fun SettingForm(
 
         Spacer(Modifier.padding(0.dp, 10.dp))
 
+        Text(if (settingViewModel.isSettingValid()) "Valid" else " No valid")
+
         Button(onClick = {
-            val data = HashMap<String, Any>().apply{
-                set(SettingKey.API_URL_KEY, settingUiState.apiURL)
-                set(SettingKey.COUNTRY_KEY, settingUiState.country)
-                set(SettingKey.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
-                set(SettingKey.API_AUTHORISATION_HEADER, settingUiState.authenticationHeader)
-                set(SettingKey.API_TOKEN, settingUiState.token)
-            }
-            onSubmit(data);
+            settingViewModel.update()
         }) {
             Text(stringResource(R.string.save_btn))
         }
@@ -119,8 +112,6 @@ fun SettingForm(
 @Composable
 fun GreetingPreview() {
     SmssenderTheme {
-        SettingForm(
-            settingViewModel = SettingViewModel()
-        )
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sms_sender.ui.screen
+package com.example.sms_sender.ui.screen.setting
 
 import SettingForm
 import androidx.compose.foundation.layout.Column
@@ -20,14 +20,19 @@ import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
 import com.example.sms_sender.ui.components.LoadingComponent
 import com.example.sms_sender.ui.components.SmsServiceAction
+import com.example.sms_sender.ui.navigation.NavigationRoute
+
+
+object SettingScreenDestination : NavigationRoute {
+    override var route = "setting"
+    override var titleRes = R.string.setting
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     settingViewModel: SettingViewModel,
-    onStartService: () -> Unit,
-    onStopService: () -> Unit,
-    onSubmit: (data: Map<String, Any>) -> Unit,
 ) {
     
     val settingUiState = settingViewModel.settingUiState;
@@ -57,11 +62,9 @@ fun SettingScreen(
                 if (settingUiState.isLoading) {
                     LoadingComponent()
                 }else {
-                    SmsServiceAction(settingUiState, onStartService, onStopService)
-
                     HorizontalDivider(modifier = Modifier.padding(PaddingValues(0.dp, 23.dp, 0.dp, 30.dp)))
 
-                    SettingForm(settingViewModel = settingViewModel, onSubmit = onSubmit)
+                    SettingForm(settingViewModel = settingViewModel)
                 }
             }
         }

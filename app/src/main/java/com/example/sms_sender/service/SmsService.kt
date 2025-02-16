@@ -11,22 +11,23 @@ import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
-import com.example.sms_sender.service.setting.SettingKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SmsService : Service() {
 
-    enum class ACTION {
-        START, STOP
+    private val SMS_LOGGER_TAG = "SMS-SERVICE"
+
+    companion object SettingKey {
+        val COUNTRY_KEY = "COUNTRY"
+        const val API_URL_KEY = "API_URL"
+        const val API_IS_AUTHENTICATED = "API_IS_AUTHENTICATED"
+        const val API_TOKEN = "API_TOKEN";
     }
 
     private var isActive = true;
-
-    private lateinit var job: Job;
 
     private val smsManager: SmsManager = SmsManager.getDefault();
 
@@ -38,41 +39,45 @@ class SmsService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        when (intent?.action){
-            ACTION.START.name -> start(intent)
-            ACTION.STOP.name -> stop()
-        }
-
+        val appContainer  = (this.application as App).appContainer
+        smsDataRepository = appContainer.smsDataRepository
+        start(intent)
+        startSmsSending()
         return super.onStartCommand(intent, flags, startId)
     }
 
     private fun start(intent: Intent?){
-
-            var baseUrl = intent?.getStringExtra(SettingKey.API_URL_KEY) ?: throw Exception("API URL NOT DEFINED")
-            val isAuth = intent.getBooleanExtra(SettingKey.API_IS_AUTHENTICATED, false);
-            val authValue = intent.getStringExtra(SettingKey.API_TOKEN).toString()
-
-        smsDataRepository = (this.application as App).appContainer.smsDataRepository
+        var baseUrl = intent?.getStringExtra(API_URL_KEY)!!
+        val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
+        val authValue = intent.getStringExtra(API_TOKEN)!!
 
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
-            job = CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
-
                     val smsApiService = SmsApi.retrofitService(baseUrl)
                     val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
 
+                    Log.i(SMS_LOGGER_TAG, baseUrl);
+
                     messages.forEachIndexed { index: Int, message: SmsResponse ->
-                        Log.i("NEW_SERVICE", "running... $index");
+                        Log.i(SMS_LOGGER_TAG, "running... $index");
                         notification(index, messages.size)
-                        sendMessage(message)
                         smsDataRepository.insert(
                             SmsData(recipient = message.recipient, message = message.message)
                         )
                     }
-                    delay(2000)
+                    delay(5000)
                 }
+        }
+    }
+
+
+    private fun startSmsSending(){
+        CoroutineScope(Dispatchers.Default).launch {
+            smsDataRepository.getUnsentItems().collect {
+                sendMessage(it)
+            }
         }
     }
 
@@ -88,13 +93,16 @@ class SmsService : Service() {
     }
 
 
-    private fun sendMessage(message: SmsResponse) {
-        smsManager.sendTextMessage(message.recipient, null, message.message, null, null);
+    private fun sendMessage(messages: List<SmsData>) {
+        messages.forEach {
+            smsManager.sendTextMessage(it.recipient, null, it.message, null, null)
+            Log.i(SMS_LOGGER_TAG, "[sms sent]: $it")
+            smsDataRepository.update(it.copy(sent = true))
+        }
     }
 
-    private fun stop(){
+    override fun onDestroy() {
+        Log.i(SMS_LOGGER_TAG, "sms service stopped")
         isActive = false
-        job.cancel()
-        stopSelf()
     }
 }
