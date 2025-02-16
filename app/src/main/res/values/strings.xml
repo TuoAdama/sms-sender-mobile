@@ -17,4 +17,5 @@
     <string name="messages">Messages</string>
     <string name="setting_required">Vous devez paramètrer l\'application</string>
     <string name="noMessage">Aucun message</string>
+    <string name="not_error">Oups !! Vous n\'êtes pas connecté à internet.</string>
 </resources>
