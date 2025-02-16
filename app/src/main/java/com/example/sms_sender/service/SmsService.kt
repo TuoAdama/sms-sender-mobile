@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SmsService : Service() {
 
@@ -56,17 +57,23 @@ class SmsService : Service() {
             CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
                     val smsApiService = SmsApi.retrofitService(baseUrl)
-                    val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
+                    try {
+                        val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
+                        Log.i(SMS_LOGGER_TAG, baseUrl);
 
-                    Log.i(SMS_LOGGER_TAG, baseUrl);
+                        messages.forEachIndexed { index: Int, message: SmsResponse ->
+                            Log.i(SMS_LOGGER_TAG, "running... $index");
 
-                    messages.forEachIndexed { index: Int, message: SmsResponse ->
-                        Log.i(SMS_LOGGER_TAG, "running... $index");
-                        notification(index, messages.size)
-                        smsDataRepository.insert(
-                            SmsData(recipient = message.recipient, message = message.message)
-                        )
+                            notification(index, messages.size)
+
+                            smsDataRepository.insert(
+                                SmsData(recipient = message.recipient, message = message.message)
+                            )
+                        }
+                    } catch (e: IOException){
+                        Log.i(SMS_LOGGER_TAG, e.message ?: "Network is down")
                     }
+
                     delay(5000)
                 }
         }
