@@ -1,7 +1,11 @@
 package com.example.sms_sender.ui.screen.home
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -13,8 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +33,6 @@ import com.example.sms_sender.stopSmsService
 import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.SmsMessageList
-import com.example.sms_sender.ui.components.SmsServiceAction
 import com.example.sms_sender.ui.navigation.NavigationRoute
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 
@@ -46,6 +52,7 @@ fun HomeScreen(
 ){
     val homeUiState by homeViewModel.homeUiState.collectAsState()
     val context = LocalContext.current
+    val isNetworkConnect = homeViewModel.isNetworkConnected.collectAsState()
 
     var isServiceRunning by remember {
         mutableStateOf(context.smsServiceIsRunning())
@@ -66,14 +73,18 @@ fun HomeScreen(
                             isServiceRunning = context.smsServiceIsRunning();
                         },
                         isServiceRunning =isServiceRunning,
-                        isSettingValid = settingViewModel.isSettingValid(),
+                        canStartService = settingViewModel.isSettingValid() && isNetworkConnect.value,
                     )
                 },
             )
         },
         content = { padding ->
             Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
-                Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
+                if (!isNetworkConnect.value){
+                    NetworkMessageError(
+                        modifier = Modifier.padding(0.dp, 20.dp)
+                    )
+                }
                 InfoSection(homeUiState)
                 Text(
                     modifier = Modifier.padding(0.dp, 18.dp),
@@ -88,7 +99,24 @@ fun HomeScreen(
 
 
 @Composable
-@Preview
-fun HomeScreenPreview(){
+fun NetworkMessageError(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(5.dp))
+            .background(Color.Red.copy(alpha = 0.65f)).fillMaxWidth()
+            .padding(20.dp, 15.dp)
+    ) {
+        Text(
+            stringResource(R.string.not_error),
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
 
+
+@Composable
+@Preview(showBackground = true)
+fun NetworkMessageErrorPreview(){
+    NetworkMessageError()
 }

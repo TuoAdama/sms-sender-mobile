@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.model.SmsData
+import com.example.sms_sender.network.NetworkMonitor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,11 +18,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewModel() {
+class HomeViewModel(private val smsDataRepository: SmsDataRepository, private val networkMonitor: NetworkMonitor) : ViewModel() {
 
     private val _homeUiStateFlow =  MutableStateFlow(HomeUiState())
     var homeUiState: StateFlow<HomeUiState> = _homeUiStateFlow
     private set
+
+    val isNetworkConnected: StateFlow<Boolean> = networkMonitor.isConnected
 
 
     init {
@@ -45,7 +48,7 @@ class HomeViewModel(private val smsDataRepository: SmsDataRepository) : ViewMode
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val appContainer = (this[APPLICATION_KEY] as App).appContainer
-                HomeViewModel(appContainer.smsDataRepository)
+                HomeViewModel(appContainer.smsDataRepository, appContainer.networkMonitor)
             }
         }
     }

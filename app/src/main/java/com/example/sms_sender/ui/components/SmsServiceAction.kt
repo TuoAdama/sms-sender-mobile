@@ -51,7 +51,7 @@ fun SmsServiceAction (
             )
         }
     }else{
-        IconButton(onClick = onStopService, enabled = enabled) {
+        IconButton(onClick = onStopService) {
             Icon(
                 imageVector = Icons.Filled.Clear,
                 contentDescription = stringResource(R.string.setting),
