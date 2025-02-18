@@ -1,6 +1,8 @@
 package com.example.sms_sender.ui.screen.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -72,15 +74,20 @@ fun HomeScreen(
             )
         },
         content = { padding ->
-            Column(modifier = Modifier.padding(20.dp, padding.calculateTopPadding())) {
-                Text("is Auth: ${settingViewModel.settingUiState.isAuthenticated}")
+            Column(Modifier.padding(top = padding.calculateTopPadding())) {
+
                 InfoSection(homeUiState)
+
                 Text(
-                    modifier = Modifier.padding(0.dp, 18.dp),
+                    modifier = Modifier.padding(start = 15.dp, top = 15.dp, bottom = 10.dp),
                     fontSize = 25.sp,
                     text = stringResource(R.string.messages)
                 )
-                SmsMessageList(homeUiState.messages)
+
+                SmsMessageList(
+                    modifier = Modifier.padding(start = 15.dp),
+                    messages = homeUiState.messages
+                )
             }
         }
     )
