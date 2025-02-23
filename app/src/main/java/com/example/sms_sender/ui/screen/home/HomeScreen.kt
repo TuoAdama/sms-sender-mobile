@@ -85,7 +85,7 @@ fun HomeScreen(
 
                 if (!isNetworkConnect.value){
                     NetworkMessageError(
-                        modifier = Modifier.padding(0.dp, 20.dp)
+                        modifier = Modifier.padding(10.dp, 20.dp)
                     )
                 }
                 

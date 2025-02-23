@@ -47,7 +47,9 @@ fun SmsServiceAction (
     if (!isServiceRunning){
         IconButton(onClick = onStartService, enabled = enabled) {
             Image(
-                painter = painterResource(R.drawable.play_icon),
+                painter = painterResource(
+                    if(enabled) R.drawable.play_icon else R.drawable.play_disable_icon
+                ),
                 contentDescription = stringResource(R.string.setting),
                 modifier = Modifier.size(35.dp),
             )
