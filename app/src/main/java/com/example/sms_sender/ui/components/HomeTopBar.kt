@@ -22,7 +22,7 @@ import com.example.sms_sender.R
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     isServiceRunning: Boolean = false,
-    isSettingValid: Boolean = false,
+    canStartService: Boolean = false,
     onClickSetting: () -> Unit = {},
     onStartService: () -> Unit = {},
     onStopService: () -> Unit = {},
@@ -40,7 +40,7 @@ fun HomeTopBar(
                 isServiceRunning = isServiceRunning,
                 onStartService = onStartService,
                 onStopService = onStopService,
-                enabled = isSettingValid
+                enabled = canStartService
             )
             IconButton(onClick = onClickSetting) {
                 Icon(

@@ -6,6 +6,7 @@ import com.example.sms_sender.data.repository.SettingRepository
 import com.example.sms_sender.data.repository.SettingRepositoryImpl
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.data.repository.SmsDataRepositoryImpl
+import com.example.sms_sender.network.NetworkMonitor
 
 class AppDataContainer(context: Context) : AppContainer {
     override val smsDataRepository: SmsDataRepository by lazy {
@@ -14,5 +15,9 @@ class AppDataContainer(context: Context) : AppContainer {
 
     override val settingRepository: SettingRepository  by lazy {
         SettingRepositoryImpl(SmsSenderDatabase.getDataBase(context).getSettingDao())
+    }
+
+    override val networkMonitor: NetworkMonitor by lazy {
+        NetworkMonitor(context)
     }
 }
