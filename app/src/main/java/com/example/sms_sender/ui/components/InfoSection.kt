@@ -1,12 +1,10 @@
 package com.example.sms_sender.ui.components
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,9 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -25,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +32,7 @@ import com.example.sms_sender.ui.screen.home.HomeUiState
 data class InfoData(
     val label: String = "",
     val value: Int = 0,
+    var painter: Painter,
 )
 
 
@@ -43,10 +41,11 @@ fun InfoSection(
     homeUiState: HomeUiState
 ){
     val infos = listOf(
-        InfoData("Total sms", homeUiState.totalSms),
-        InfoData("Envoyé", homeUiState.numOfSmsSent),
-        InfoData("Non envoyé", homeUiState.numOfUnSmsSent)
+        InfoData("Total sms", homeUiState.totalSms, painterResource(R.drawable.message_icon)),
+        InfoData("Envoyé", homeUiState.numOfSmsSent, painterResource(R.drawable.message_sent) ),
+        InfoData("Non envoyé", homeUiState.numOfUnSmsSent, painterResource(R.drawable.message_unsent)),
     )
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -77,7 +76,7 @@ fun InfoItem(infoData: InfoData){
             Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(10.dp),
+                .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -85,8 +84,8 @@ fun InfoItem(infoData: InfoData){
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
+                Image(
+                    painter = infoData.painter,
                     contentDescription = stringResource(R.string.setting),
                     modifier = Modifier.size(30.dp),
                 )
@@ -109,5 +108,5 @@ fun InfoSectionPreview(){
 @Composable
 @Preview(showBackground = true)
 fun InfoItemPreview(){
-    InfoItem(InfoData("Message envoyé", 10))
+    InfoItem(InfoData("Message envoyé", 10, painterResource(R.drawable.message_icon)))
 }
