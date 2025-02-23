@@ -41,9 +41,9 @@ fun InfoSection(
     homeUiState: HomeUiState
 ){
     val infos = listOf(
-        InfoData("Total sms", homeUiState.totalSms, painterResource(R.drawable.message_icon)),
-        InfoData("Envoyé", homeUiState.numOfSmsSent, painterResource(R.drawable.message_sent) ),
-        InfoData("Non envoyé", homeUiState.numOfUnSmsSent, painterResource(R.drawable.message_unsent)),
+        InfoData(stringResource(R.string.message_total), homeUiState.totalSms, painterResource(R.drawable.message_icon)),
+        InfoData(stringResource(R.string.message_sent), homeUiState.numOfSmsSent, painterResource(R.drawable.message_sent) ),
+        InfoData(stringResource(R.string.message_unsent), homeUiState.numOfUnSmsSent, painterResource(R.drawable.message_unsent)),
     )
 
     LazyVerticalGrid(
@@ -108,5 +108,5 @@ fun InfoSectionPreview(){
 @Composable
 @Preview(showBackground = true)
 fun InfoItemPreview(){
-    InfoItem(InfoData("Message envoyé", 10, painterResource(R.drawable.message_icon)))
+    InfoItem(InfoData(stringResource(R.string.message_sent), 10, painterResource(R.drawable.message_icon)))
 }

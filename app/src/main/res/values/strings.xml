@@ -17,4 +17,7 @@
     <string name="messages">Messages</string>
     <string name="setting_required">Vous devez paramètrer l\'application</string>
     <string name="noMessage">Aucun message</string>
+    <string name="message_total">Total sms</string>
+    <string name="message_sent">Envoyés</string>
+    <string name="message_unsent">Non envoyés</string>
 </resources>
