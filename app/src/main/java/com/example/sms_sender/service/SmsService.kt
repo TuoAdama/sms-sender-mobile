@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
 import com.example.sms_sender.data.repository.SmsDataRepository
+import com.example.sms_sender.exception.UndefinedSmsServiceKeyException
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
@@ -48,10 +49,9 @@ class SmsService : Service() {
     }
 
     private fun start(intent: Intent?){
-        var baseUrl = intent?.getStringExtra(API_URL_KEY)!!
+        var baseUrl = intent?.getStringExtra(API_URL_KEY) ?: throw UndefinedSmsServiceKeyException("API URL key is not defined")
         val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
-        val authValue = intent.getStringExtra(API_TOKEN)!!
-
+        val authValue = intent.getStringExtra(API_TOKEN) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
             CoroutineScope(Dispatchers.Default).launch {

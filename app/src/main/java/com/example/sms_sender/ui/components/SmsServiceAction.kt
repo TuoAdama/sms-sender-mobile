@@ -1,5 +1,6 @@
 package com.example.sms_sender.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,16 +46,16 @@ fun SmsServiceAction (
 ){
     if (!isServiceRunning){
         IconButton(onClick = onStartService, enabled = enabled) {
-            Icon(
-                imageVector = Icons.Default.PlayArrow,
+            Image(
+                painter = painterResource(R.drawable.play_icon),
                 contentDescription = stringResource(R.string.setting),
                 modifier = Modifier.size(35.dp),
             )
         }
     }else{
-        IconButton(onClick = onStopService) {
-            Icon(
-                imageVector = Icons.Filled.Clear,
+        IconButton(onClick = onStopService, enabled = enabled) {
+            Image(
+                painter = painterResource(R.drawable.stop_icon),
                 contentDescription = stringResource(R.string.setting),
                 modifier = Modifier.size(35.dp),
             )

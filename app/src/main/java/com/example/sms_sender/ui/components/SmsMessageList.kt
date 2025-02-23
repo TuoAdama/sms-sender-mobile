@@ -15,9 +15,10 @@ import com.example.sms_sender.model.SmsData
 
 @Composable
 fun SmsMessageList(
-    messages: List<SmsData>
+    modifier: Modifier = Modifier,
+    messages: List<SmsData>,
 ){
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         if (messages.isNotEmpty()){
             messages.forEach {
                 SmsMessageItem(smsData = it, modifier = Modifier.padding(0.dp, 10.dp))
