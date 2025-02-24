@@ -8,17 +8,17 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
+import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
-import com.example.sms_sender.ui.theme.SmssenderTheme
 
 @Composable
 fun SettingForm(
@@ -54,6 +54,12 @@ fun SettingForm(
             onValueChange = {value -> settingViewModel.updateSetting(
                 settingUiState.copy(apiURL = value)
             ) },
+            isError = settingUiState.apiUrlError !== null,
+            supportingText = {
+                if (settingUiState.apiUrlError !== null){
+                    Text(stringResource(settingUiState.apiUrlError))
+                }
+            }
         )
 
         Spacer(Modifier.padding(0.dp, 10.dp))
@@ -70,6 +76,7 @@ fun SettingForm(
 
         if (settingUiState.isAuthenticated){
             Spacer(Modifier.padding(0.dp, 10.dp))
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = {
@@ -80,6 +87,7 @@ fun SettingForm(
                 onValueChange = {}
             )
             Spacer(Modifier.padding(0.dp, 10.dp))
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = {
@@ -88,17 +96,21 @@ fun SettingForm(
                 //visualTransformation = PasswordVisualTransformation(),
                 value = settingUiState.token,
                 maxLines = 1,
+                isError = settingUiState.tokenError !== null,
                 onValueChange = {value ->
                     settingViewModel.updateSetting(
                         settingUiState.copy(token = value)
                     )
                 },
+                supportingText = {
+                    if (settingUiState.tokenError !== null ){
+                        Text(stringResource(settingUiState.tokenError))
+                    }
+                }
             )
         }
 
         Spacer(Modifier.padding(0.dp, 10.dp))
-
-        Text(if (settingViewModel.isSettingValid()) "Valid" else " No valid")
 
         Button(onClick = {
             settingViewModel.update()
@@ -111,7 +123,7 @@ fun SettingForm(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    SmssenderTheme {
-
-    }
+    SettingForm(
+        settingViewModel = SettingViewModel(DataStoreService(LocalContext.current))
+    )
 }
