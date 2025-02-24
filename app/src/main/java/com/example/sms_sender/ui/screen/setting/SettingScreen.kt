@@ -15,11 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
+import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.ui.components.LoadingComponent
-import com.example.sms_sender.ui.components.SmsServiceAction
 import com.example.sms_sender.ui.navigation.NavigationRoute
 
 
@@ -68,5 +70,14 @@ fun SettingScreen(
                 }
             }
         }
+    )
+}
+
+
+@Composable
+@Preview(showBackground = true)
+fun SettingPreview(){
+    SettingScreen(
+        settingViewModel = SettingViewModel(DataStoreService(LocalContext.current))
     )
 }
