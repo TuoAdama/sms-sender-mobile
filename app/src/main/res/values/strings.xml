@@ -24,4 +24,6 @@
     <string name="api_error">L\'URL ne peut être vide</string>
     <string name="api_url_not_valid">URL non valide</string>
     <string name="token_not_empty">Cette value ne peut-être vide</string>
+    <string name="setting_baseUrl">API URL</string>
+    <string name="visibility">Eye</string>
 </resources>
