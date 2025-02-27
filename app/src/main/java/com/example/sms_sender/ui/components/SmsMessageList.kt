@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -25,6 +23,8 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.SwipeToDismissBoxValue.StartToEnd
+import androidx.compose.material3.SwipeToDismissBoxValue.EndToStart
+import androidx.compose.material3.SwipeToDismissBoxValue.Settled
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -60,19 +60,12 @@ fun SmsMessageList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmsMessageItemSwipe(modifier: Modifier = Modifier, smsData: SmsData){
-    val context = LocalContext.current
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             when(it) {
-                StartToEnd -> {
-                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
-                }
-                SwipeToDismissBoxValue.EndToStart -> {
-                    Toast.makeText(context, "Item archived", Toast.LENGTH_SHORT).show()
-                }
-                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+                StartToEnd, Settled -> return@rememberSwipeToDismissBoxState false
+                else -> return@rememberSwipeToDismissBoxState true
             }
-            return@rememberSwipeToDismissBoxState true
         },
         // positional threshold of 25%
         positionalThreshold = { it * .25f }
@@ -125,8 +118,8 @@ fun MessageItemPreview(){
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
     val color = when (dismissState.dismissDirection) {
         StartToEnd -> Color.Transparent
-        SwipeToDismissBoxValue.EndToStart -> Color.Red
-        SwipeToDismissBoxValue.Settled -> Color.Transparent
+        EndToStart -> Color.Red
+        Settled -> Color.Transparent
     }
 
     Row(
