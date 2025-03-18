@@ -26,4 +26,6 @@
     <string name="token_not_empty">Cette value ne peut-être vide</string>
     <string name="setting_baseUrl">API URL</string>
     <string name="visibility">Eye</string>
+    <string name="delete">Supprimer</string>
+    <string name="trash_description">Icône poubelle</string>
 </resources>

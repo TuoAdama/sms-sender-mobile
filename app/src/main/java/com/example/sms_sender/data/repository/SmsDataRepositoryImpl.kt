@@ -17,4 +17,6 @@ class SmsDataRepositoryImpl(private val smsDataDao: SmsDataDao) : SmsDataReposit
 
     override fun update(smsData: SmsData): Int = smsDataDao.update(smsData)
 
+    override suspend fun delete(smsData: SmsData): Void = smsDataDao.delete(smsData)
+
 }

@@ -1,5 +1,6 @@
 package com.example.sms_sender.ui.screen.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,9 +34,11 @@ import com.example.sms_sender.startSmsService
 import com.example.sms_sender.stopSmsService
 import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
-import com.example.sms_sender.ui.components.SmsMessageList
+import com.example.sms_sender.ui.components.messages.SmsMessageList
 import com.example.sms_sender.ui.navigation.NavigationRoute
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 object HomeScreenDestination : NavigationRoute {
@@ -43,6 +47,7 @@ object HomeScreenDestination : NavigationRoute {
 }
 
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -53,6 +58,7 @@ fun HomeScreen(
     val homeUiState by homeViewModel.homeUiState.collectAsState()
     val context = LocalContext.current
     val isNetworkConnect = homeViewModel.isNetworkConnected.collectAsState()
+    val coroutineScope = rememberCoroutineScope();
 
     var isServiceRunning by remember {
         mutableStateOf(context.smsServiceIsRunning())
@@ -87,7 +93,7 @@ fun HomeScreen(
                         modifier = Modifier.padding(10.dp, 20.dp)
                     )
                 }
-                
+
                 InfoSection(homeUiState)
 
                 Text(
@@ -95,10 +101,14 @@ fun HomeScreen(
                     fontSize = 25.sp,
                     text = stringResource(R.string.messages)
                 )
-
                 SmsMessageList(
                     modifier = Modifier.padding(start = 15.dp),
-                    messages = homeUiState.messages
+                    messages = homeUiState.messages,
+                    onDelete = {smsData ->
+                        coroutineScope.launch(Dispatchers.Default) {
+                            homeViewModel.delete(smsData)
+                        }
+                    }
                 )
             }
         }

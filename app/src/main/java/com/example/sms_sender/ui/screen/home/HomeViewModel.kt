@@ -18,13 +18,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val smsDataRepository: SmsDataRepository, private val networkMonitor: NetworkMonitor) : ViewModel() {
+class HomeViewModel(private val smsDataRepository: SmsDataRepository, networkMonitor: NetworkMonitor) : ViewModel() {
 
     private val _homeUiStateFlow =  MutableStateFlow(HomeUiState())
     var homeUiState: StateFlow<HomeUiState> = _homeUiStateFlow
     private set
 
     val isNetworkConnected: StateFlow<Boolean> = networkMonitor.isConnected
+
+
+    suspend fun delete(smsData: SmsData){
+        smsDataRepository.delete(smsData)
+    }
 
 
     init {

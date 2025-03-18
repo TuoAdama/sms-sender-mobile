@@ -17,4 +17,6 @@ interface SmsDataRepository {
     fun getCountUnSmsSent(): Flow<Int>
 
     fun update(smsData: SmsData): Int
+
+    suspend fun delete(smsData: SmsData): Void
 }

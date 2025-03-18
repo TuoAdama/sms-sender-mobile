@@ -1,6 +1,7 @@
 package com.example.sms_sender.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -30,4 +31,7 @@ interface SmsDataDao {
 
     @Update
     fun update(smsData: SmsData): Int
+
+    @Delete
+    fun delete(smsData: SmsData): Void
 }
