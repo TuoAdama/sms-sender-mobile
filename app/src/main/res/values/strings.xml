@@ -28,4 +28,8 @@
     <string name="visibility">Eye</string>
     <string name="delete">Supprimer</string>
     <string name="trash_description">Icône poubelle</string>
+    <string name="attention">Suppression</string>
+    <string name="delete_question">Êtes-vous sûr de supprimer ce message ?</string>
+    <string name="no">Non</string>
+    <string name="yes">Oui</string>
 </resources>
