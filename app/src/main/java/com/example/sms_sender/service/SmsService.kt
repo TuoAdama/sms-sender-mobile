@@ -23,8 +23,8 @@ class SmsService : Service() {
     private val SMS_LOGGER_TAG = "SMS-SERVICE"
 
     companion object SettingKey {
-        val SCHEDULE_TIME =  "SCHEDULE_TIME"
-        val COUNTRY_KEY = "COUNTRY"
+        const val SCHEDULE_TIME =  "SCHEDULE_TIME"
+        const val COUNTRY_KEY = "COUNTRY"
         const val API_URL_KEY = "API_URL"
         const val API_IS_AUTHENTICATED = "API_IS_AUTHENTICATED"
         const val API_TOKEN = "API_TOKEN";
@@ -55,6 +55,8 @@ class SmsService : Service() {
         val authValue = intent.getStringExtra(API_TOKEN) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
             baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
+        val scheduleTime = intent.getIntExtra(SCHEDULE_TIME, 10_000);
+
             CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
                     val smsApiService = SmsApi.retrofitService(baseUrl)
@@ -75,7 +77,7 @@ class SmsService : Service() {
                         Log.i(SMS_LOGGER_TAG, e.message ?: "Network is down")
                     }
 
-                    delay(5000)
+                    delay(scheduleTime.toLong())
                 }
         }
     }

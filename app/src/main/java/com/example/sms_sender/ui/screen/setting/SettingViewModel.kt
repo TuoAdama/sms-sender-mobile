@@ -12,7 +12,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
 import com.example.sms_sender.R
-import com.example.sms_sender.model.Setting
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.service.SmsService
 import kotlinx.coroutines.launch
@@ -64,13 +63,8 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         }
     }
 
-    fun getSetting(): Setting {
-        return Setting(
-            country = settingUiState.country,
-            isAuthenticated = settingUiState.isAuthenticated,
-            token = settingUiState.token,
-            domain = settingUiState.apiURL,
-        )
+    fun getSetting(): SettingUiState {
+        return settingUiState
     }
 
 

@@ -39,7 +39,7 @@ fun ScheduleSelect(
     val key  = choices.entries.firstOrNull { it.value == value }?.key ?: choices.keys.first()
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(key) } // Première valeur par défaut
+    var selectedText by remember { mutableStateOf(key) }
 
     Box(modifier = modifier) {
         ExposedDropdownMenuBox(

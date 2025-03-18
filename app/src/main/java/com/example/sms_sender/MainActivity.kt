@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import com.example.sms_sender.model.Setting
 import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.ui.navigation.SmsSenderApp
+import com.example.sms_sender.ui.screen.setting.SettingUiState
 
 
 class MainActivity : ComponentActivity() {
@@ -56,21 +57,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Context.getActivityOrNull(): Activity? {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) return context
-        context = context.baseContext
-    }
-    return null
-}
-
-fun Context.startSmsService(setting: Setting) {
+fun Context.startSmsService(setting: SettingUiState) {
     MainActivity.smsServiceIntent = Intent(this, SmsService::class.java)
         .also {
-            it.putExtra(SmsService.API_URL_KEY, setting.domain)
+            it.putExtra(SmsService.API_URL_KEY, setting.apiURL)
             it.putExtra(SmsService.API_IS_AUTHENTICATED, setting.isAuthenticated)
             it.putExtra(SmsService.API_TOKEN, setting.token)
+            it.putExtra(SmsService.SCHEDULE_TIME, setting.scheduleTime)
             startService(it)
         }
 }
