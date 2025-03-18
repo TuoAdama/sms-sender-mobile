@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
@@ -38,5 +39,17 @@ class DataStoreService(context: Context)
         return dataStore.data.map {
             it[booleanPreferencesKey(key)]
         }.first()
+    }
+
+    suspend fun getInt(key: String): Int? {
+        return dataStore.data.map {
+            it[intPreferencesKey(key)]
+        }.first()
+    }
+
+    suspend fun saveInt(key: String, value: Int) {
+        dataStore.edit {
+            it[intPreferencesKey(key)] = value
+        }
     }
 }

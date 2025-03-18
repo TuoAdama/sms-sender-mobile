@@ -23,6 +23,7 @@ class SmsService : Service() {
     private val SMS_LOGGER_TAG = "SMS-SERVICE"
 
     companion object SettingKey {
+        val SCHEDULE_TIME =  "SCHEDULE_TIME"
         val COUNTRY_KEY = "COUNTRY"
         const val API_URL_KEY = "API_URL"
         const val API_IS_AUTHENTICATED = "API_IS_AUTHENTICATED"

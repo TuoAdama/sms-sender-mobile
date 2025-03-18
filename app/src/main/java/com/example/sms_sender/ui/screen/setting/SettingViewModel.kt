@@ -1,6 +1,5 @@
 package com.example.sms_sender.ui.screen.setting
 
-import android.util.Log
 import android.webkit.URLUtil
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,8 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
             country = dataStoreService.getString(SmsService.COUNTRY_KEY) ?: "",
             isAuthenticated = dataStoreService.getBoolean(SmsService.API_IS_AUTHENTICATED) ?: false,
             token = dataStoreService.getString(SmsService.API_TOKEN) ?: "",
-            isRunning = false
+            isRunning = false,
+            scheduleTime = dataStoreService.getInt(SmsService.SCHEDULE_TIME) ?: 10_000
         )
     }
 
@@ -59,6 +59,7 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
                 dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
                 dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
                 dataStoreService.saveString(SmsService.COUNTRY_KEY, settingUiState.country)
+                dataStoreService.saveInt(SmsService.SCHEDULE_TIME, settingUiState.scheduleTime)
             }
         }
     }
@@ -103,6 +104,8 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
 data class SettingUiState (
     val isRunning: Boolean = false,
     val isLoading: Boolean = false,
+
+    val scheduleTime: Int = 10_000,
 
     val apiURL: String = "",
     val apiUrlError: Int? = null,

@@ -24,7 +24,7 @@
     <string name="api_error">L\'URL ne peut être vide</string>
     <string name="api_url_not_valid">URL non valide</string>
     <string name="token_not_empty">Cette value ne peut-être vide</string>
-    <string name="setting_baseUrl">API URL</string>
+    <string name="setting_baseUrl">Nom de domaine</string>
     <string name="visibility">Eye</string>
     <string name="delete">Supprimer</string>
     <string name="trash_description">Icône poubelle</string>
@@ -32,4 +32,6 @@
     <string name="delete_question">Êtes-vous sûr de supprimer ce message ?</string>
     <string name="no">Non</string>
     <string name="yes">Oui</string>
+    <string name="retreive_frequency">Fréquence de récuperation</string>
+    <string name="dropdown_icon">Dropdown Icon</string>
 </resources>

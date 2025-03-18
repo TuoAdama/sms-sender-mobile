@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.ui.components.CountryChoice
+import com.example.sms_sender.ui.components.ScheduleSelect
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 
@@ -73,6 +75,14 @@ fun SettingForm(
                 }
             }
         )
+
+        ScheduleSelect(modifier = Modifier.fillMaxWidth()){
+            settingViewModel.updateSetting(
+                settingUiState.copy(
+                    scheduleTime = it
+                )
+            )
+        }
 
         Spacer(Modifier.padding(0.dp, 10.dp))
 
