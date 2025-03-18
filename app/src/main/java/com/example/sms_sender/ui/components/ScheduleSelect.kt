@@ -23,8 +23,10 @@ import com.example.sms_sender.R
 @Composable
 fun ScheduleSelect(
     modifier: Modifier = Modifier,
+    value: Int = 10_000,
     onSelect: (value: Int) -> Unit = {}
 ){
+
     val choices = mapOf(
         "10 secs" to 10000,
         "30 secs" to 30000,
@@ -33,8 +35,11 @@ fun ScheduleSelect(
         "5 minutes" to 300000
     )
 
+
+    val key  = choices.entries.firstOrNull { it.value == value }?.key ?: choices.keys.first()
+
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(choices.keys.first()) } // Première valeur par défaut
+    var selectedText by remember { mutableStateOf(key) } // Première valeur par défaut
 
     Box(modifier = modifier) {
         ExposedDropdownMenuBox(

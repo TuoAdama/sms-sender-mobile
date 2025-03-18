@@ -76,7 +76,7 @@ fun SettingForm(
             }
         )
 
-        ScheduleSelect(modifier = Modifier.fillMaxWidth()){
+        ScheduleSelect(modifier = Modifier.fillMaxWidth(), value = settingUiState.scheduleTime){
             settingViewModel.updateSetting(
                 settingUiState.copy(
                     scheduleTime = it
