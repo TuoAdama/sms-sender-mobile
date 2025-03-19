@@ -28,11 +28,11 @@ fun ScheduleSelect(
 ){
 
     val choices = mapOf(
-        "10 secs" to 10000,
-        "30 secs" to 30000,
-        "1 minute" to 60000,
-        "2 minutes" to 120000,
-        "5 minutes" to 300000
+        "10 secs" to 10_000,
+        "30 secs" to 30_000,
+        "1 minute" to 60_000,
+        "2 minutes" to 12_0000,
+        "5 minutes" to 30_0000
     )
 
 
