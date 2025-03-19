@@ -31,8 +31,8 @@ fun ScheduleSelect(
         "10 secs" to 10_000,
         "30 secs" to 30_000,
         "1 minute" to 60_000,
-        "2 minutes" to 12_0000,
-        "5 minutes" to 30_0000
+        "2 minutes" to 120_000,
+        "5 minutes" to 300_000
     )
 
 
