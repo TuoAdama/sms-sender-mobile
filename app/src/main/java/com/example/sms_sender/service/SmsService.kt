@@ -53,7 +53,8 @@ class SmsService : Service() {
         var baseUrl = intent?.getStringExtra(API_URL_KEY) ?: throw UndefinedSmsServiceKeyException("API URL key is not defined")
         val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
         val authValue = intent.getStringExtra(API_TOKEN) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
-            baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
+
+        baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
 
         val scheduleTime = intent.getIntExtra(SCHEDULE_TIME, 10_000);
 

@@ -34,4 +34,5 @@
     <string name="yes">Oui</string>
     <string name="retreive_frequency">Fréquence de récuperation</string>
     <string name="dropdown_icon">Dropdown Icon</string>
+    <string name="messages_not_exist">Aucun message</string>
 </resources>

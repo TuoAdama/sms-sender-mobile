@@ -1,9 +1,14 @@
 package com.example.sms_sender.ui.screen.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,6 +30,7 @@ import com.example.sms_sender.R
 import com.example.sms_sender.smsServiceIsRunning
 import com.example.sms_sender.startSmsService
 import com.example.sms_sender.stopSmsService
+import com.example.sms_sender.ui.components.EmptyMessageInfo
 import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.NetworkMessageError
@@ -94,15 +101,25 @@ fun HomeScreen(
                     fontSize = 25.sp,
                     text = stringResource(R.string.messages)
                 )
-                SmsMessageList(
-                    modifier = Modifier.padding(start = 15.dp),
-                    messages = homeUiState.messages,
-                    onDelete = {smsData ->
-                        coroutineScope.launch(Dispatchers.Default) {
-                            homeViewModel.delete(smsData)
+
+                HorizontalDivider(Modifier.padding(10.dp))
+
+                if (homeUiState.messages.isNotEmpty()){
+                    SmsMessageList(
+                        modifier = Modifier.padding(start = 15.dp),
+                        messages = homeUiState.messages,
+                        onDelete = {smsData ->
+                            coroutineScope.launch(Dispatchers.Default) {
+                                homeViewModel.delete(smsData)
+                            }
                         }
-                    }
-                )
+                    )
+                }else{
+                    EmptyMessageInfo(
+                        modifier = Modifier.fillMaxWidth()
+                                    .fillMaxHeight()
+                    )
+                }
             }
         }
     )
