@@ -1,4 +1,3 @@
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,11 +26,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
+import com.example.sms_sender.restartSmsService
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.ui.components.CountryChoice
 import com.example.sms_sender.ui.components.ScheduleSelect
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingForm(
@@ -40,6 +44,7 @@ fun SettingForm(
 
     val settingUiState: SettingUiState = settingViewModel.settingUiState
     var tokenVisible by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Column (
         modifier = Modifier
@@ -139,8 +144,20 @@ fun SettingForm(
 
         Spacer(Modifier.padding(0.dp, 10.dp))
 
-        Button(onClick = {
-            settingViewModel.update()
+        Button(
+            onClick = {
+            settingViewModel.updateSetting(
+                settingUiState.copy(isLoading = true)
+            )
+            CoroutineScope(Dispatchers.Default).launch {
+                settingViewModel.update()
+                if (settingViewModel.isValid()){
+                    context.restartSmsService(settingUiState)
+                }
+                settingViewModel.updateSetting(
+                    settingUiState.copy(isLoading = false)
+                )
+            }
         }) {
             Text(stringResource(R.string.save_btn))
         }

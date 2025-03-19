@@ -68,6 +68,11 @@ fun Context.startSmsService(setting: SettingUiState) {
         }
 }
 
+fun Context.restartSmsService(setting: SettingUiState) {
+    this.stopSmsService()
+    this.startSmsService(setting)
+}
+
 fun Context.stopSmsService() {
     if (MainActivity.smsServiceIntent !== null){
         stopService(MainActivity.smsServiceIntent)

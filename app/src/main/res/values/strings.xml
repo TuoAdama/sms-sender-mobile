@@ -35,4 +35,5 @@
     <string name="retreive_frequency">Fréquence de récuperation</string>
     <string name="dropdown_icon">Dropdown Icon</string>
     <string name="messages_not_exist">Aucun message</string>
+    <string name="isLoading_message">Chargement...</string>
 </resources>

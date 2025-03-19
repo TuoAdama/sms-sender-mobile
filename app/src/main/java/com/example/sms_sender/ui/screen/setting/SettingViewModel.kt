@@ -51,15 +51,13 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         )
     }
 
-    fun update() {
+    suspend fun update() {
         if (isValid()){
-            viewModelScope.launch {
-                dataStoreService.saveBoolean(SmsService.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
-                dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
-                dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
-                dataStoreService.saveString(SmsService.COUNTRY_KEY, settingUiState.country)
-                dataStoreService.saveInt(SmsService.SCHEDULE_TIME, settingUiState.scheduleTime)
-            }
+            dataStoreService.saveBoolean(SmsService.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
+            dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
+            dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
+            dataStoreService.saveString(SmsService.COUNTRY_KEY, settingUiState.country)
+            dataStoreService.saveInt(SmsService.SCHEDULE_TIME, settingUiState.scheduleTime)
         }
     }
 
