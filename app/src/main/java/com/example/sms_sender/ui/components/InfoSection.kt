@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,9 +43,9 @@ fun InfoSection(
     homeUiState: HomeUiState
 ){
     val infos = listOf(
-        InfoData(stringResource(R.string.message_total), homeUiState.totalSms, painterResource(R.drawable.message_icon)),
-        InfoData(stringResource(R.string.message_sent), homeUiState.numOfSmsSent, painterResource(R.drawable.message_sent) ),
-        InfoData(stringResource(R.string.message_unsent), homeUiState.numOfUnSmsSent, painterResource(R.drawable.message_unsent)),
+        InfoData(stringResource(R.string.message_total), homeUiState.totalSms, painterResource(R.drawable.message_sent)),
+        InfoData(stringResource(R.string.message_sent), homeUiState.numOfSmsSent, painterResource(R.drawable.sms_sent) ),
+        InfoData(stringResource(R.string.message_unsent), homeUiState.numOfUnSmsSent, painterResource(R.drawable.sms_unsent)),
     )
 
     LazyVerticalGrid(

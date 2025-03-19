@@ -1,18 +1,16 @@
 package com.example.sms_sender.ui.components.messages
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Sms
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
@@ -22,8 +20,7 @@ import com.example.sms_sender.model.SmsData
 @Composable
 fun MessageItem(smsData: SmsData){
 
-    val warningColor = colorResource(R.color.warning);
-    val greenColor = colorResource(R.color.green);
+    val paintResource = painterResource(if (smsData.sent) R.drawable.sms_sent else R.drawable.sms_unsent);
 
     ListItem(
         modifier = Modifier.clip(MaterialTheme.shapes.small),
@@ -42,10 +39,9 @@ fun MessageItem(smsData: SmsData){
             }
         },
         leadingContent = {
-            Icon(
-                imageVector = Icons.Filled.Sms,
+            Image(
+                painter = paintResource,
                 contentDescription = "person icon",
-                tint = if (smsData.sent) greenColor else warningColor,
                 modifier = Modifier
                     .clip(CircleShape)
                     .padding(10.dp)
