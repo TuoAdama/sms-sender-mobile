@@ -1,3 +1,4 @@
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -149,9 +150,13 @@ fun SettingForm(
             settingViewModel.updateSetting(
                 settingUiState.copy(isLoading = true)
             )
+            val isValid = settingViewModel.isValid()
+            if (isValid){
+                Toast.makeText(context, R.string.setting_saved, Toast.LENGTH_SHORT).show()
+            }
             CoroutineScope(Dispatchers.Default).launch {
                 settingViewModel.update()
-                if (settingViewModel.isValid()){
+                if (isValid){
                     context.restartSmsService(settingUiState)
                 }
                 settingViewModel.updateSetting(
