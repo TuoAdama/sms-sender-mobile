@@ -29,13 +29,12 @@ import androidx.compose.ui.unit.sp
 import com.example.sms_sender.R
 import com.example.sms_sender.restartSmsService
 import com.example.sms_sender.service.DataStoreService
-import com.example.sms_sender.ui.components.CountryChoice
-import com.example.sms_sender.ui.components.ScheduleSelect
+import com.example.sms_sender.ui.components.dropdown.CountryChoice
+import com.example.sms_sender.ui.components.dropdown.ScheduleSelect
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable

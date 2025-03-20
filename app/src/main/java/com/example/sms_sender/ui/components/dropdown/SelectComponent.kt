@@ -1,4 +1,4 @@
-package com.example.sms_sender.ui.components
+package com.example.sms_sender.ui.components.dropdown
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

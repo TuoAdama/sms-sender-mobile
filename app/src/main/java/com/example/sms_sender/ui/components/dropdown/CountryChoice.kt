@@ -1,4 +1,4 @@
-package com.example.sms_sender.ui.components
+package com.example.sms_sender.ui.components.dropdown
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
