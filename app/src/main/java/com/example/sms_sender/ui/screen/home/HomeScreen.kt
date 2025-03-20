@@ -1,8 +1,6 @@
 package com.example.sms_sender.ui.screen.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,16 +32,9 @@ import com.example.sms_sender.ui.components.HomeTopBar
 import com.example.sms_sender.ui.components.InfoSection
 import com.example.sms_sender.ui.components.NetworkMessageError
 import com.example.sms_sender.ui.components.messages.SmsMessageList
-import com.example.sms_sender.ui.navigation.NavigationRoute
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-
-object HomeScreenDestination : NavigationRoute {
-    override var route = "home"
-    override var titleRes = R.string.app_name
-}
 
 
 @SuppressLint("MutableCollectionMutableState")

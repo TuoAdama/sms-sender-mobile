@@ -37,4 +37,5 @@
     <string name="messages_not_exist">Aucun message</string>
     <string name="isLoading_message">Chargement...</string>
     <string name="setting_saved">Enregistré</string>
+    <string name="back_button">Bouton de retour</string>
 </resources>
