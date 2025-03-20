@@ -4,7 +4,7 @@ object CountryCodeHandler {
 
     const val FRANCE: String = "France";
 
-    private var countriesMap = HashMap<String, Int>();
+    var countriesMap = HashMap<String, Int>();
 
     init {
         countriesMap["France"] = 33;
