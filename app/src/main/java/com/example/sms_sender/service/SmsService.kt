@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.time.LocalDateTime
 
 class SmsService : Service() {
 
@@ -71,7 +72,10 @@ class SmsService : Service() {
                             notification(index, messages.size)
 
                             smsDataRepository.insert(
-                                SmsData(recipient = message.recipient, message = message.message)
+                                SmsData(
+                                    recipient = message.recipient,
+                                    message = message.message,
+                                )
                             )
                         }
                     } catch (e: IOException){
@@ -108,7 +112,7 @@ class SmsService : Service() {
         messages.forEach {
             smsManager.sendTextMessage(it.recipient, null, it.message, null, null)
             Log.i(SMS_LOGGER_TAG, "[sms sent]: $it")
-            smsDataRepository.update(it.copy(sent = true))
+            smsDataRepository.update(it.copy(sent = true, updatedAt = LocalDateTime.now()))
         }
     }
 

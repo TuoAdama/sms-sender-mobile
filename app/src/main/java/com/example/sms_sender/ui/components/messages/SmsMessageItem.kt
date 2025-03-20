@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sms_sender.R
 import com.example.sms_sender.model.SmsData
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -46,6 +48,14 @@ fun MessageItem(smsData: SmsData){
                     .clip(CircleShape)
                     .padding(10.dp)
             )
+        },
+        trailingContent = {
+            val updatedAt = smsData.updatedAt;
+            var formatPattern = "HH:mm"
+            if (LocalDateTime.now().isBefore(updatedAt)) {
+                formatPattern = "dd/MM/yyyy"
+            }
+            Text(updatedAt.format(DateTimeFormatter.ofPattern(formatPattern)))
         }
     )
 }
@@ -53,5 +63,5 @@ fun MessageItem(smsData: SmsData){
 @Composable
 @Preview(showBackground = true)
 fun MessageItemPreview(){
-    MessageItem(SmsData(1, "0751097177", "Bonjour"))
+    MessageItem(SmsData(1, "0751097177", "Bonjour", createdAt = LocalDateTime.now(), updatedAt = LocalDateTime.now()))
 }
