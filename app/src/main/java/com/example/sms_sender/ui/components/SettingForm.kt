@@ -31,6 +31,7 @@ import com.example.sms_sender.restartSmsService
 import com.example.sms_sender.service.DataStoreService
 import com.example.sms_sender.ui.components.dropdown.CountryChoice
 import com.example.sms_sender.ui.components.dropdown.ScheduleSelect
+import com.example.sms_sender.ui.screen.setting.SettingErrorState
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 import com.example.sms_sender.ui.screen.setting.SettingViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -43,6 +44,7 @@ fun SettingForm(
 ) {
 
     val settingUiState: SettingUiState = settingViewModel.settingUiState
+    val settingErrorState: SettingErrorState = settingViewModel.settingErrorState
     var tokenVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -73,10 +75,10 @@ fun SettingForm(
             onValueChange = {value -> settingViewModel.updateSetting(
                 settingUiState.copy(apiURL = value)
             ) },
-            isError = settingUiState.apiUrlError !== null,
+            isError = settingErrorState.apiUrlError !== null,
             supportingText = {
-                if (settingUiState.apiUrlError !== null){
-                    Text(stringResource(settingUiState.apiUrlError))
+                if (settingErrorState.apiUrlError !== null){
+                    Text(stringResource(settingErrorState.apiUrlError))
                 }
             }
         )
@@ -123,7 +125,7 @@ fun SettingForm(
                 visualTransformation = if (tokenVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 value = settingUiState.token,
                 maxLines = 1,
-                isError = settingUiState.tokenError !== null,
+                isError = settingErrorState.tokenError !== null,
                 trailingIcon = {
                     IconButton(onClick = {tokenVisible = !tokenVisible}){
                         Icon(imageVector = if (tokenVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility, stringResource(R.string.visibility))
@@ -135,8 +137,8 @@ fun SettingForm(
                     )
                 },
                 supportingText = {
-                    if (settingUiState.tokenError !== null ){
-                        Text(stringResource(settingUiState.tokenError))
+                    if (settingErrorState.tokenError !== null ){
+                        Text(stringResource(settingErrorState.tokenError))
                     }
                 }
             )
@@ -146,21 +148,22 @@ fun SettingForm(
 
         Button(
             onClick = {
-            settingViewModel.updateSetting(
-                settingUiState.copy(isLoading = true)
-            )
-            val isValid = settingViewModel.isValid()
+
+            val isValid = settingViewModel.validate()
+
             if (isValid){
-                Toast.makeText(context, R.string.setting_saved, Toast.LENGTH_SHORT).show()
-            }
-            CoroutineScope(Dispatchers.Default).launch {
-                settingViewModel.update()
-                if (isValid){
-                    context.restartSmsService(settingUiState)
-                }
                 settingViewModel.updateSetting(
-                    settingUiState.copy(isLoading = false)
+                    settingUiState.copy(isLoading = true)
                 )
+                CoroutineScope(Dispatchers.Default).launch {
+                    settingViewModel.update()
+                    context.restartSmsService(settingUiState)
+                    settingViewModel.updateSetting(
+                        settingUiState.copy(isLoading = false)
+                    )
+                }
+
+                Toast.makeText(context, R.string.setting_saved, Toast.LENGTH_SHORT).show()
             }
         }) {
             Text(stringResource(R.string.save_btn))

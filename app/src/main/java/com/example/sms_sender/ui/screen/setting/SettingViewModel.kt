@@ -20,6 +20,9 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
     var settingUiState by mutableStateOf(SettingUiState())
         private set
 
+    var settingErrorState by mutableStateOf(SettingErrorState())
+        private set
+
 
     init {
         viewModelScope.launch {
@@ -52,16 +55,14 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
     }
 
     suspend fun update() {
-        if (isValid()){
-            dataStoreService.saveBoolean(Setting.API_IS_AUTHENTICATED_KEY, settingUiState.isAuthenticated)
-            dataStoreService.saveString(Setting.API_TOKEN_KEY, settingUiState.token)
+        dataStoreService.saveBoolean(Setting.API_IS_AUTHENTICATED_KEY, settingUiState.isAuthenticated)
+        dataStoreService.saveString(Setting.API_TOKEN_KEY, settingUiState.token)
 
-            val url = settingUiState.apiURL;
+        val url = settingUiState.apiURL;
 
-            dataStoreService.saveString(Setting.API_URL_KEY, if( url.endsWith("/") ) url else url.plus("/") )
-            dataStoreService.saveString(Setting.COUNTRY_KEY, settingUiState.country)
-            dataStoreService.saveInt(Setting.SCHEDULE_TIME_KEY, settingUiState.scheduleTime)
-        }
+        dataStoreService.saveString(Setting.API_URL_KEY, if( url.endsWith("/") ) url else url.plus("/") )
+        dataStoreService.saveString(Setting.COUNTRY_KEY, settingUiState.country)
+        dataStoreService.saveInt(Setting.SCHEDULE_TIME_KEY, settingUiState.scheduleTime)
     }
 
     fun getSetting(): SettingUiState {
@@ -69,29 +70,30 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
     }
 
 
-    fun isValid(): Boolean {
+    fun validate(): Boolean {
+        settingErrorState = SettingErrorState();
         return this.validateApiUrl() && this.validateToken()
     }
 
 
     private fun validateApiUrl(): Boolean{
-        settingUiState = settingUiState.copy(apiUrlError = null)
+        settingErrorState = settingErrorState.copy(apiUrlError = null)
         if (settingUiState.apiURL.isEmpty()){
-            settingUiState = settingUiState.copy(apiUrlError = R.string.api_error)
+            settingErrorState = settingErrorState.copy(apiUrlError = R.string.api_error)
         }
         if (!URLUtil.isValidUrl(settingUiState.apiURL)){
-            settingUiState = settingUiState.copy(apiUrlError = R.string.api_url_not_valid)
+            settingErrorState = settingErrorState.copy(apiUrlError = R.string.api_url_not_valid)
         }
-        return settingUiState.apiUrlError === null
+        return settingErrorState.apiUrlError === null
     }
 
     private fun validateToken(): Boolean {
-        settingUiState = settingUiState.copy(tokenError = null)
+        settingErrorState = settingErrorState.copy(tokenError = null)
 
         if (settingUiState.isAuthenticated && settingUiState.token.isEmpty()){
-            settingUiState = settingUiState.copy(tokenError = R.string.token_not_empty)
+            settingErrorState = settingErrorState.copy(tokenError = R.string.token_not_empty)
         }
-        return settingUiState.tokenError === null
+        return settingErrorState.tokenError === null
     }
 
 }
@@ -99,18 +101,18 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
 data class SettingUiState (
     val isRunning: Boolean = false,
     val isLoading: Boolean = false,
-
     val scheduleTime: Int = Setting.SCHEDULE_TIME_DEFAULT_VALUE,
-
     val apiURL: String = "",
-    val apiUrlError: Int? = null,
-
     val country: String = "",
     val isAuthenticated: Boolean = false,
-
     val authenticationHeader: String = "",
-    val authenticationHeaderError: Int? = null,
-
     val token: String = "",
+)
+
+
+data class SettingErrorState(
+    val scheduleTime: Int = Setting.SCHEDULE_TIME_DEFAULT_VALUE,
+    val apiUrlError: Int? = null,
+    val authenticationHeaderError: Int? = null,
     val tokenError: Int? = null,
 )

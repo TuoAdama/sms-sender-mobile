@@ -69,7 +69,7 @@ fun HomeScreen(
                             isServiceRunning = context.smsServiceIsRunning();
                         },
                         isServiceRunning =isServiceRunning,
-                        canStartService = settingViewModel.isValid() && isNetworkConnect.value,
+                        canStartService = settingViewModel.validate() && isNetworkConnect.value,
                     )
                 },
             )
