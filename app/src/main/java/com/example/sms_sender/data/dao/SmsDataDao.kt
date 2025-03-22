@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SmsDataDao {
-    @Query("SELECT * FROM sms_data")
+    @Query("SELECT * FROM sms_data ORDER BY createdAt DESC")
     fun getAllItems(): Flow<List<SmsData>>
 
-    @Query("SELECT * FROM sms_data WHERE sent = 0")
+    @Query("SELECT * FROM sms_data WHERE sent = 0 ORDER BY createdAt DESC")
     fun getAllUnsentItems(): Flow<List<SmsData>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
