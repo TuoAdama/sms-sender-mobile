@@ -47,12 +47,13 @@ class SmsService : Service() {
     private fun start(intent: Intent?){
         val baseUrl = intent?.getStringExtra(Setting.API_URL_KEY) ?: throw UndefinedSmsServiceKeyException(
             getString(R.string.not_defined_api_url)
-        )
-        val isAuth = intent.getBooleanExtra(Setting.API_IS_AUTHENTICATED_KEY, false)
+        );
+        val isAuth = intent.getBooleanExtra(Setting.API_IS_AUTHENTICATED_KEY, false);
         val authValue = intent.getStringExtra(Setting.API_TOKEN_KEY) ?: throw UndefinedSmsServiceKeyException(
             getString(R.string.not_defined_token)
-        )
-        val scheduleTime = intent.getIntExtra(Setting.SCHEDULE_TIME_KEY, Setting.SCHEDULE_TIME_DEFAULT_VALUE)
+        );
+
+        val scheduleTime = intent.getIntExtra(Setting.SCHEDULE_TIME_KEY, Setting.SCHEDULE_TIME_DEFAULT_VALUE);
 
             CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
