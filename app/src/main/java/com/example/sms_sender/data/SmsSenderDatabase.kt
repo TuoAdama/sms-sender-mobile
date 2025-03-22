@@ -6,17 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.sms_sender.converter.DateTimeConverter
-import com.example.sms_sender.data.dao.SettingDao
 import com.example.sms_sender.data.dao.SmsDataDao
-import com.example.sms_sender.model.Setting
 import com.example.sms_sender.model.SmsData
 
 
-@Database(entities = [SmsData::class, Setting::class], version = 3, exportSchema = true)
+@Database(entities = [SmsData::class], version = 1, exportSchema = true)
 @TypeConverters(DateTimeConverter::class)
 abstract class SmsSenderDatabase : RoomDatabase() {
     abstract fun getSmsDataDao(): SmsDataDao
-    abstract fun getSettingDao(): SettingDao
 
     companion object {
         private const val DATABASE_NAME = "sms_database";

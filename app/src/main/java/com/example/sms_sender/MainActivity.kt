@@ -14,7 +14,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import com.example.sms_sender.model.Setting
 import com.example.sms_sender.service.SmsService
 import com.example.sms_sender.ui.navigation.SmsSenderApp
 import com.example.sms_sender.ui.screen.setting.SettingUiState
