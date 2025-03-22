@@ -9,10 +9,10 @@ import retrofit2.http.Header
 
 
 interface SmsApiService{
-    @GET("api/messages/all/unsent")
+    @GET("api/messages")
     suspend fun getSms(@Header("Authorization") authorization: String): List<SmsResponse>
 
-    @GET("api/messages/all/unsent")
+    @GET("api/messages")
     suspend fun getSms(): List<SmsResponse>
 }
 
