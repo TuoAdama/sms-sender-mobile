@@ -61,7 +61,7 @@ fun HomeScreen(
                     HomeTopBar(
                         onClickSetting = navigateToSettingScreen,
                         onStartService = {
-                            context.startSmsService(settingViewModel.getSetting())
+                            context.startSmsService(settingViewModel.settingUiState)
                             isServiceRunning = context.smsServiceIsRunning();
                         },
                         onStopService = {

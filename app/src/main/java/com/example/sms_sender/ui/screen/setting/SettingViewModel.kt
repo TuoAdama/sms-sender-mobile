@@ -65,10 +65,6 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         dataStoreService.saveInt(Setting.SCHEDULE_TIME_KEY, settingUiState.scheduleTime)
     }
 
-    fun getSetting(): SettingUiState {
-        return settingUiState
-    }
-
 
     fun validate(): Boolean {
         settingErrorState = SettingErrorState();
