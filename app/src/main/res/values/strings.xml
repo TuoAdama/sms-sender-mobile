@@ -38,4 +38,6 @@
     <string name="isLoading_message">Chargement...</string>
     <string name="setting_saved">Enregistré</string>
     <string name="back_button">Bouton de retour</string>
+    <string name="not_defined_api_url">API URL key is not defined</string>
+    <string name="not_defined_token">API Token key is not defined</string>
 </resources>

@@ -55,7 +55,10 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
         if (isValid()){
             dataStoreService.saveBoolean(Setting.API_IS_AUTHENTICATED_KEY, settingUiState.isAuthenticated)
             dataStoreService.saveString(Setting.API_TOKEN_KEY, settingUiState.token)
-            dataStoreService.saveString(Setting.API_URL_KEY, settingUiState.apiURL)
+
+            val url = settingUiState.apiURL;
+
+            dataStoreService.saveString(Setting.API_URL_KEY, if( url.endsWith("/") ) url else url.plus("/") )
             dataStoreService.saveString(Setting.COUNTRY_KEY, settingUiState.country)
             dataStoreService.saveInt(Setting.SCHEDULE_TIME_KEY, settingUiState.scheduleTime)
         }

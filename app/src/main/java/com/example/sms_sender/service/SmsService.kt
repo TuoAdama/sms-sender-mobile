@@ -7,6 +7,7 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.sms_sender.App
+import com.example.sms_sender.R
 import com.example.sms_sender.data.repository.SmsDataRepository
 import com.example.sms_sender.exception.UndefinedSmsServiceKeyException
 import com.example.sms_sender.model.SmsData
@@ -22,7 +23,7 @@ import java.time.LocalDateTime
 
 class SmsService : Service() {
 
-    private val SMS_LOGGER_TAG = "SMS-SERVICE"
+    private val smsLoggerTag = "SMS-SERVICE"
 
     private var isActive = true;
 
@@ -44,22 +45,24 @@ class SmsService : Service() {
     }
 
     private fun start(intent: Intent?){
-        var baseUrl = intent?.getStringExtra(Setting.API_URL_KEY) ?: throw UndefinedSmsServiceKeyException("API URL key is not defined")
+        val baseUrl = intent?.getStringExtra(Setting.API_URL_KEY) ?: throw UndefinedSmsServiceKeyException(
+            getString(R.string.not_defined_api_url)
+        )
         val isAuth = intent.getBooleanExtra(Setting.API_IS_AUTHENTICATED_KEY, false)
-        val authValue = intent.getStringExtra(Setting.API_TOKEN_KEY) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
+        val authValue = intent.getStringExtra(Setting.API_TOKEN_KEY) ?: throw UndefinedSmsServiceKeyException(
+            getString(R.string.not_defined_token)
+        )
         val scheduleTime = intent.getIntExtra(Setting.SCHEDULE_TIME_KEY, Setting.SCHEDULE_TIME_DEFAULT_VALUE)
-
-        baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/")
 
             CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){
                     val smsApiService = SmsApi.retrofitService(baseUrl)
                     try {
                         val messages = if (isAuth) smsApiService.getSms(authValue) else smsApiService.getSms()
-                        Log.i(SMS_LOGGER_TAG, baseUrl);
+                        Log.i(smsLoggerTag, baseUrl);
 
                         messages.forEachIndexed { index: Int, message: SmsResponse ->
-                            Log.i(SMS_LOGGER_TAG, "running... $index");
+                            Log.i(smsLoggerTag, "running... $index");
 
                             notification(index, messages.size)
 
@@ -71,7 +74,7 @@ class SmsService : Service() {
                             )
                         }
                     } catch (e: IOException){
-                        Log.i(SMS_LOGGER_TAG, e.message ?: "Network is down")
+                        Log.i(smsLoggerTag, e.message ?: "Network is down")
                     }
 
                     delay(scheduleTime.toLong())
@@ -103,13 +106,13 @@ class SmsService : Service() {
     private fun sendMessage(messages: List<SmsData>) {
         messages.forEach {
             smsManager.sendTextMessage(it.recipient, null, it.message, null, null)
-            Log.i(SMS_LOGGER_TAG, "[sms sent]: $it")
+            Log.i(smsLoggerTag, "[sms sent]: $it")
             smsDataRepository.update(it.copy(sent = true, updatedAt = LocalDateTime.now()))
         }
     }
 
     override fun onDestroy() {
-        Log.i(SMS_LOGGER_TAG, "sms service stopped")
+        Log.i(smsLoggerTag, "sms service stopped")
         isActive = false
     }
 }
