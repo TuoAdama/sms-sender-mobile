@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sms_sender.App
 import com.example.sms_sender.R
 import com.example.sms_sender.service.DataStoreService
-import com.example.sms_sender.service.SmsService
+import com.example.sms_sender.service.setting.Setting
 import kotlinx.coroutines.launch
 
 class SettingViewModel(private val dataStoreService: DataStoreService) : ViewModel() {
@@ -42,22 +42,22 @@ class SettingViewModel(private val dataStoreService: DataStoreService) : ViewMod
 
     private suspend fun initWithPreferenceData(){
         settingUiState = SettingUiState(
-            apiURL = dataStoreService.getString(SmsService.API_URL_KEY) ?: "",
-            country = dataStoreService.getString(SmsService.COUNTRY_KEY) ?: "",
-            isAuthenticated = dataStoreService.getBoolean(SmsService.API_IS_AUTHENTICATED) ?: false,
-            token = dataStoreService.getString(SmsService.API_TOKEN) ?: "",
+            apiURL = dataStoreService.getString(Setting.API_URL_KEY) ?: "",
+            country = dataStoreService.getString(Setting.COUNTRY_KEY) ?: "",
+            isAuthenticated = dataStoreService.getBoolean(Setting.API_IS_AUTHENTICATED_KEY) ?: false,
+            token = dataStoreService.getString(Setting.API_TOKEN_KEY) ?: "",
             isRunning = false,
-            scheduleTime = dataStoreService.getInt(SmsService.SCHEDULE_TIME) ?: 10_000
+            scheduleTime = dataStoreService.getInt(Setting.SCHEDULE_TIME_KEY) ?: Setting.SCHEDULE_TIME_DEFAULT_VALUE
         )
     }
 
     suspend fun update() {
         if (isValid()){
-            dataStoreService.saveBoolean(SmsService.API_IS_AUTHENTICATED, settingUiState.isAuthenticated)
-            dataStoreService.saveString(SmsService.API_TOKEN, settingUiState.token)
-            dataStoreService.saveString(SmsService.API_URL_KEY, settingUiState.apiURL)
-            dataStoreService.saveString(SmsService.COUNTRY_KEY, settingUiState.country)
-            dataStoreService.saveInt(SmsService.SCHEDULE_TIME, settingUiState.scheduleTime)
+            dataStoreService.saveBoolean(Setting.API_IS_AUTHENTICATED_KEY, settingUiState.isAuthenticated)
+            dataStoreService.saveString(Setting.API_TOKEN_KEY, settingUiState.token)
+            dataStoreService.saveString(Setting.API_URL_KEY, settingUiState.apiURL)
+            dataStoreService.saveString(Setting.COUNTRY_KEY, settingUiState.country)
+            dataStoreService.saveInt(Setting.SCHEDULE_TIME_KEY, settingUiState.scheduleTime)
         }
     }
 
@@ -97,7 +97,7 @@ data class SettingUiState (
     val isRunning: Boolean = false,
     val isLoading: Boolean = false,
 
-    val scheduleTime: Int = 10_000,
+    val scheduleTime: Int = Setting.SCHEDULE_TIME_DEFAULT_VALUE,
 
     val apiURL: String = "",
     val apiUrlError: Int? = null,

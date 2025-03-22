@@ -12,6 +12,7 @@ import com.example.sms_sender.exception.UndefinedSmsServiceKeyException
 import com.example.sms_sender.model.SmsData
 import com.example.sms_sender.network.SmsApi
 import com.example.sms_sender.network.SmsResponse
+import com.example.sms_sender.service.setting.Setting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,14 +23,6 @@ import java.time.LocalDateTime
 class SmsService : Service() {
 
     private val SMS_LOGGER_TAG = "SMS-SERVICE"
-
-    companion object SettingKey {
-        const val SCHEDULE_TIME =  "SCHEDULE_TIME"
-        const val COUNTRY_KEY = "COUNTRY"
-        const val API_URL_KEY = "API_URL"
-        const val API_IS_AUTHENTICATED = "API_IS_AUTHENTICATED"
-        const val API_TOKEN = "API_TOKEN";
-    }
 
     private var isActive = true;
 
@@ -51,13 +44,12 @@ class SmsService : Service() {
     }
 
     private fun start(intent: Intent?){
-        var baseUrl = intent?.getStringExtra(API_URL_KEY) ?: throw UndefinedSmsServiceKeyException("API URL key is not defined")
-        val isAuth = intent.getBooleanExtra(API_IS_AUTHENTICATED, false)
-        val authValue = intent.getStringExtra(API_TOKEN) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
+        var baseUrl = intent?.getStringExtra(Setting.API_URL_KEY) ?: throw UndefinedSmsServiceKeyException("API URL key is not defined")
+        val isAuth = intent.getBooleanExtra(Setting.API_IS_AUTHENTICATED_KEY, false)
+        val authValue = intent.getStringExtra(Setting.API_TOKEN_KEY) ?: throw UndefinedSmsServiceKeyException("API Token key is not defined")
+        val scheduleTime = intent.getIntExtra(Setting.SCHEDULE_TIME_KEY, Setting.SCHEDULE_TIME_DEFAULT_VALUE)
 
-        baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/");
-
-        val scheduleTime = intent.getIntExtra(SCHEDULE_TIME, 10_000);
+        baseUrl = if( baseUrl.last() == '/' ) baseUrl else baseUrl.plus("/")
 
             CoroutineScope(Dispatchers.Default).launch {
                 while (isActive){

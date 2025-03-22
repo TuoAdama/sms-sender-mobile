@@ -15,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.example.sms_sender.service.SmsService
+import com.example.sms_sender.service.setting.Setting
 import com.example.sms_sender.ui.navigation.SmsSenderApp
 import com.example.sms_sender.ui.screen.setting.SettingUiState
 
@@ -59,10 +60,10 @@ class MainActivity : ComponentActivity() {
 fun Context.startSmsService(setting: SettingUiState) {
     MainActivity.smsServiceIntent = Intent(this, SmsService::class.java)
         .also {
-            it.putExtra(SmsService.API_URL_KEY, setting.apiURL)
-            it.putExtra(SmsService.API_IS_AUTHENTICATED, setting.isAuthenticated)
-            it.putExtra(SmsService.API_TOKEN, setting.token)
-            it.putExtra(SmsService.SCHEDULE_TIME, setting.scheduleTime)
+            it.putExtra(Setting.API_URL_KEY, setting.apiURL)
+            it.putExtra(Setting.API_IS_AUTHENTICATED_KEY, setting.isAuthenticated)
+            it.putExtra(Setting.API_TOKEN_KEY, setting.token)
+            it.putExtra(Setting.SCHEDULE_TIME_KEY, setting.scheduleTime)
             startService(it)
         }
 }

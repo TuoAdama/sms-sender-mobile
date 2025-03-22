@@ -4,15 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.sms_sender.R
+import com.example.sms_sender.service.setting.Setting
 
 @Composable
 fun ScheduleSelect(
     modifier: Modifier = Modifier,
-    value: Int = 10_000,
+    value: Int = Setting.SCHEDULE_TIME_DEFAULT_VALUE,
     onSelect: (value: Int) -> Unit = {}
 ){
 
     val choices = mapOf(
+        "5 secs" to 5_000,
         "10 secs" to 10_000,
         "30 secs" to 30_000,
         "1 minute" to 60_000,
