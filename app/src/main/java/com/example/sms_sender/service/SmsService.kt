@@ -104,11 +104,12 @@ class SmsService : Service() {
     }
 
 
-    private fun sendMessage(messages: List<SmsData>) {
+    private suspend fun sendMessage(messages: List<SmsData>) {
         messages.forEach {
             smsManager.sendTextMessage(it.recipient, null, it.message, null, null)
             Log.i(smsLoggerTag, "[sms sent]: $it")
             smsDataRepository.update(it.copy(sent = true, updatedAt = LocalDateTime.now()))
+            delay(Setting.SMS_BETWEEN_EACH_SENDING_SMS)
         }
     }
 
